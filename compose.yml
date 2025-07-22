@@ -8,12 +8,12 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - interview-archive-network
+      - interviewdb-network
     ports:
       - "5432:5432"
 
 networks:
-  interview-archive-network:
+  interviewdb-network:
     driver: bridge
 
 volumes:
