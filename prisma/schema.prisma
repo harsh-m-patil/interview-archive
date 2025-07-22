@@ -15,7 +15,7 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String     @id
   name          String
   email         String
   emailVerified Boolean
@@ -24,6 +24,8 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  answers       Answer[]
+  questions     Question[]
 
   @@unique([email])
   @@map("user")
@@ -72,4 +74,51 @@ model Verification {
   updatedAt  DateTime?
 
   @@map("verification")
+}
+
+model Question {
+  id           String   @id @default(cuid())
+  question     String   @db.Text
+  questionLink String?
+  role         Role?    @relation(fields: [roleId], references: [id])
+  roleId       String?
+  answers      Answer[]
+  tags         Tag[]    @relation("QuestionTags")
+  createdBy    User     @relation(fields: [createdById], references: [id])
+  createdById  String
+  Company      Company? @relation(fields: [companyId], references: [id])
+  companyId    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Answer {
+  id          String   @id @default(cuid())
+  content     String   @db.Text
+  contentLink String?
+  question    Question @relation(fields: [questionId], references: [id])
+  questionId  String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Tag {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  questions Question[] @relation("QuestionTags")
+}
+
+model Company {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  questions Question[]
+}
+
+model Role {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  questions Question[]
 }
