@@ -32,7 +32,7 @@ export const QuestionsCard = ({
           <Avatar className="h-8 w-8 flex-shrink-0">
             <AvatarImage src={question.createdBy.image!} />
             <AvatarFallback className="text-xs">
-              {question.createdBy.name.slice(0, 2)}
+              {(question.createdBy.name ?? "??").slice(0, 2)}
             </AvatarFallback>
           </Avatar>
           <span className="text-sm font-medium truncate">

@@ -51,8 +51,8 @@ const formSchema = z
     tags: z.array(z.string()).optional(),
   })
   .refine((data) => data.content || data.link, {
-    message: "Either Question or QuestionLink must be provided",
-    path: ["question", "questionLink"],
+    message: "Either content or link must be provided",
+    path: ["content", "link"],
   });
 
 export const PostQuestionModal = () => {
@@ -96,7 +96,7 @@ export const PostQuestionModal = () => {
     if (current.includes(tagId)) {
       form.setValue(
         "tags",
-        current.filter((id) => id !== tagId),
+        current.filter((id) => id !== tagId)
       );
     } else {
       form.setValue("tags", [...current, tagId]);
@@ -220,7 +220,7 @@ export const PostQuestionModal = () => {
                                 onSelect={() => toggleTag(tag.id)}
                                 className={cn(
                                   "cursor-pointer",
-                                  selectedTags?.includes(tag.id) && "bg-muted",
+                                  selectedTags?.includes(tag.id) && "bg-muted"
                                 )}
                               >
                                 {tag.name}
