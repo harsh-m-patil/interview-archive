@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BadgeQuestionMark, CircleSlash2 } from "lucide-react";
+import { ModeToggle } from "@/components/theme-toggle";
 
 type link = {
   label: string;
@@ -37,9 +38,10 @@ export const Navbar = () => {
             </Link>
           ))}
         </ul>
-        <div>
-          <Link href="/sign-in">
-            <Button>Get Started</Button>
+        <div className="flex items-center gap-x-4">
+          <ModeToggle />
+          <Link href="/questions">
+            <Button>Explore</Button>
           </Link>
         </div>
       </nav>

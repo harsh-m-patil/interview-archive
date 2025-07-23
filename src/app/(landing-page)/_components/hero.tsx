@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
+import { HeroImage } from "./hero-image";
 
 export const Hero = () => {
   return (
@@ -21,13 +21,7 @@ export const Hero = () => {
           <Button>Get Started</Button>
         </Link>
       </div>
-      <Image
-        src="/app.png"
-        alt="Interview Archive App Screenshot"
-        className="rounded-lg shadow-lg border-2"
-        width={1800}
-        height={1000}
-      />
+      <HeroImage />
     </div>
   );
 };

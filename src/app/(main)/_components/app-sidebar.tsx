@@ -15,6 +15,7 @@ import {
 import { NavUser } from "./sidebar/nav-user";
 import Link from "next/link";
 import { QuestionFilters } from "./sidebar/questions-filter";
+import { ModeToggle } from "@/components/theme-toggle";
 
 const items = [
   {
@@ -72,6 +73,7 @@ export function AppSidebar() {
         <QuestionFilters />
       </SidebarContent>
       <SidebarFooter>
+        <ModeToggle />
         <NavUser />
       </SidebarFooter>
     </Sidebar>
