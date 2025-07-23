@@ -10,7 +10,7 @@ export const useUser = () => {
 };
 
 const getUser = async () => {
-  const res = await fetch("api/session");
+  const res = await fetch("/api/session");
   if (res.ok) {
     const data = await res.json();
     return data.user;

@@ -3,7 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/lib/db";
-import { CalendarDays, Clock, User } from "lucide-react";
+import { CalendarDays, Clock, SquareArrowOutUpRight, User } from "lucide-react";
+import { AnswerQuestionButton } from "@/app/(main)/_components/answer-question-button";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 type QuestionPageProps = {
   params: Promise<{
@@ -47,6 +50,11 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
           name: true,
           image: true,
           emailVerified: true,
+        },
+      },
+      answers: {
+        include: {
+          createdBy: true,
         },
       },
     },
@@ -183,6 +191,64 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
                 </p>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="shadow-sm w-full">
+          <CardHeader>
+            <h3 className="text-lg font-semibold flex gap-4 items-center">
+              Answers
+              <AnswerQuestionButton questionId={questionId} />
+            </h3>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {question.answers.length > 0 &&
+              question.answers.map((answer) => (
+                <Card
+                  key={answer.id}
+                  className={cn(
+                    question.createdById === answer.createdById
+                      ? "border-primary"
+                      : "border-muted",
+                  )}
+                >
+                  <CardContent className="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div>
+                      {answer.contentLink && (
+                        <Link
+                          href={answer.contentLink}
+                          className="gap-2 flex items-center underline"
+                        >
+                          Answer
+                          <SquareArrowOutUpRight className="size-4" />
+                        </Link>
+                      )}
+                      {answer.content && (
+                        <p className="max-w-3xl">{answer.content}</p>
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage
+                            src={answer.createdBy.image || "/placeholder.svg"}
+                            alt={answer.createdBy.name}
+                          />
+                          <AvatarFallback className="bg-primary/10 text-primary font-semibold">
+                            {getInitials(answer.createdBy.name)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-medium text-foreground">
+                          {answer.createdBy.name}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {formatDate(answer.createdAt)}
+                      </p>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
           </CardContent>
         </Card>
       </div>
