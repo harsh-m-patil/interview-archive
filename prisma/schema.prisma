@@ -77,17 +77,18 @@ model Verification {
 }
 
 model Question {
-  id           String   @id @default(cuid())
-  question     String   @db.Text
-  questionLink String?
-  role         Role?    @relation(fields: [roleId], references: [id])
-  roleId       String?
-  answers      Answer[]
-  tags         Tag[]    @relation("QuestionTags")
-  createdBy    User     @relation(fields: [createdById], references: [id])
-  createdById  String
-  Company      Company? @relation(fields: [companyId], references: [id])
-  companyId    String?
+  id          String   @id @default(cuid())
+  title       String
+  content     String   @db.Text
+  link        String?
+  role        Role?    @relation(fields: [roleId], references: [id])
+  roleId      String?
+  answers     Answer[]
+  tags        Tag[]    @relation("QuestionTags")
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+  Company     Company? @relation(fields: [companyId], references: [id])
+  companyId   String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

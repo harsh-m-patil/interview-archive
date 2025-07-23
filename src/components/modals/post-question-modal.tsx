@@ -3,6 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useEffect, useState } from "react";
 
 import {
   Dialog,
@@ -12,7 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -21,18 +24,33 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandEmpty,
+} from "@/components/ui/command";
 
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
+import { Tag } from "@/generated/prisma";
+import { X } from "lucide-react";
 
 const formSchema = z
   .object({
-    question: z.string(),
-    questionLink: z.url().optional(),
+    title: z.string(),
+    content: z.string().optional(),
+    link: z.url().optional(),
+    tags: z.array(z.string()).optional(),
   })
-  .refine((data) => data.question || data.questionLink, {
+  .refine((data) => data.content || data.link, {
     message: "Either Question or QuestionLink must be provided",
     path: ["question", "questionLink"],
   });
@@ -46,11 +64,44 @@ export const PostQuestionModal = () => {
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      question: "",
+      title: "",
+      content: "",
+      link: undefined,
+      tags: [],
     },
   });
 
   const isLoading = form.formState.isSubmitting;
+
+  const [allTags, setAllTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const res = await fetch("/api/tags");
+        const data = await res.json();
+        setAllTags(data);
+      } catch (err) {
+        console.error("[FETCH_TAGS]", err);
+      }
+    };
+
+    fetchTags();
+  }, []);
+
+  const selectedTags = form.watch("tags");
+
+  const toggleTag = (tagId: string) => {
+    const current = form.getValues("tags") || [];
+    if (current.includes(tagId)) {
+      form.setValue(
+        "tags",
+        current.filter((id) => id !== tagId),
+      );
+    } else {
+      form.setValue("tags", [...current, tagId]);
+    }
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
@@ -76,68 +127,123 @@ export const PostQuestionModal = () => {
   };
 
   return (
-    <div>
-      <Dialog open={isModalOpen} onOpenChange={handleClose}>
-        <DialogContent className="bg-white text-black p-0 overflow-hidden">
-          <DialogHeader className="pt-8 px-6">
-            <DialogTitle className="text-2xl font-bold text-center">
-              Post a Question
-            </DialogTitle>
-            <DialogDescription className="text-center text-zinc-500">
-              Share your question with the community and get help from others.
-            </DialogDescription>
-          </DialogHeader>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="space-y-8 px-6">
-                <FormField
-                  control={form.control}
-                  name="question"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-                        Question
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={isLoading}
-                          className="bg-zinc-500/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                          placeholder="Enter your question here"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="questionLink"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="uppercase text-xs font-bold text-zinc-500 dark:text-secondary/70">
-                        Question Link
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={isLoading}
-                          className="bg-zinc-500/50 border-0 focus-visible:ring-0 text-black focus-visible:ring-offset-0"
-                          placeholder="Enter question link (optional)"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <DialogFooter className="bg-gray-100 px-6 py-4">
-                <Button disabled={isLoading}>Post</Button>
-              </DialogFooter>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
-    </div>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
+      <DialogContent className="p-0 overflow-hidden">
+        <DialogHeader className="pt-8 px-6">
+          <DialogTitle className="sr-only">Post a Question</DialogTitle>
+          <DialogDescription className="text-center">
+            Share your question with the community and get help from others.
+          </DialogDescription>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="space-y-2 px-6">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="sr-only">Title</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={isLoading}
+                        placeholder="Question title"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="sr-only">Question</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        disabled={isLoading}
+                        placeholder="Enter question content"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="link"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="sr-only">Question Link</FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={isLoading}
+                        placeholder="Enter question link (optional)"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Tag Selector */}
+              <FormField
+                control={form.control}
+                name="tags"
+                render={() => (
+                  <FormItem>
+                    <FormLabel className="sr-only">Tags</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full justify-start text-left"
+                        >
+                          {selectedTags?.length === 0
+                            ? "Select tags"
+                            : `${selectedTags?.length} tag(s) selected`}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="p-0">
+                        <Command>
+                          <CommandInput placeholder="Search tags..." />
+                          <CommandList>
+                            <CommandEmpty>No tags found.</CommandEmpty>
+                            {allTags.map((tag) => (
+                              <CommandItem
+                                key={tag.id}
+                                onSelect={() => toggleTag(tag.id)}
+                                className={cn(
+                                  "cursor-pointer",
+                                  selectedTags?.includes(tag.id) && "bg-muted",
+                                )}
+                              >
+                                {tag.name}
+                                {selectedTags?.includes(tag.id) && (
+                                  <X className="ml-auto h-4 w-4 text-muted-foreground" />
+                                )}
+                              </CommandItem>
+                            ))}
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <DialogFooter className="px-6 py-4">
+              <Button disabled={isLoading}>Post</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 };
