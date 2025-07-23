@@ -110,7 +110,7 @@ export const PostQuestionModal = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await fetch("/api/questions", {
+      const res = await fetch("/api/questions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -118,10 +118,17 @@ export const PostQuestionModal = () => {
         body: JSON.stringify(values),
       });
 
+      if (!res.ok) {
+        const errorData = await res.json();
+        toast.error(errorData);
+        return;
+      }
+
       queryClient.invalidateQueries({
         queryKey: ["questions"],
       });
-      toast.success("Question posted successfully!");
+
+      if (res.status === 201) toast.success("Question posted successfully!");
       form.reset();
       router.refresh();
       onClose();

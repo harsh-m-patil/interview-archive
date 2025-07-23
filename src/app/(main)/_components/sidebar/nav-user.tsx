@@ -28,19 +28,27 @@ import {
 import { signOut } from "@/lib/auth-client";
 import { useUser } from "@/hooks/query/use-user";
 import { useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function NavUser() {
   const { data: user, error, isPending } = useUser();
   const queryClient = useQueryClient();
   const { isMobile } = useSidebar();
 
-  if (isPending) {
-    return null;
-  }
-
   // Handle error state
-  if (error || !user) {
-    return null;
+  if (error || !user || isPending) {
+    return (
+      <SidebarMenu>
+        <SidebarMenuItem>
+          <Link href="/sign-in">
+            <Button variant="secondary" className="w-full">
+              Sign in
+            </Button>
+          </Link>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    );
   }
 
   return (

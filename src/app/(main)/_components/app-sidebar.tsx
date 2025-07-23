@@ -73,8 +73,10 @@ export function AppSidebar() {
         <QuestionFilters />
       </SidebarContent>
       <SidebarFooter>
-        <ModeToggle />
-        <NavUser />
+        <div className="flex justify-end gap-2 items-center border p-2 rounded-md">
+          <NavUser />
+          <ModeToggle />
+        </div>
       </SidebarFooter>
     </Sidebar>
   );

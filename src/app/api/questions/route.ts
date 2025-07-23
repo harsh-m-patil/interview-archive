@@ -10,7 +10,7 @@ export async function POST(request: Request) {
     });
 
     if (!session) {
-      return NextResponse.redirect(new URL("/sign-in", request.url));
+      return NextResponse.json("Login Please", { status: 401 });
     }
 
     const { title, link, content, tags, companyId } = await request.json();
