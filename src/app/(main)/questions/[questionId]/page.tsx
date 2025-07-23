@@ -56,6 +56,9 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
         include: {
           createdBy: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       },
     },
   });

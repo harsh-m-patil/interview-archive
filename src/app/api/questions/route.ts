@@ -71,6 +71,9 @@ export async function GET(request: Request) {
 
     const questions = await db.question.findMany({
       where: whereClause,
+      orderBy: {
+        createdAt: "desc",
+      },
       include: {
         tags: {
           select: {

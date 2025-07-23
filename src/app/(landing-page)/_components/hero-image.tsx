@@ -4,6 +4,7 @@ import { useTheme } from "next-themes";
 
 export const HeroImage = () => {
   const { theme } = useTheme();
+
   return (
     <Image
       src={theme === "dark" ? "/app.png" : "/app-light.png"}
