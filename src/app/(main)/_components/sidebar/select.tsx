@@ -1,7 +1,6 @@
 "use client";
-
 import { SidebarMenuItem } from "@/components/ui/sidebar";
-import { useState } from "react";
+import { useQueryState, parseAsArrayOf, parseAsString } from "nuqs";
 import { cn } from "@/lib/utils";
 import { useQuestionFilter } from "@/hooks/use-question-filters-store";
 import { Company, Tag } from "@/generated/prisma";
@@ -11,19 +10,22 @@ interface Props {
 }
 
 export const TagsSelect = ({ tags }: Props) => {
-  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
+  const [selectedTagNames, setSelectedTagNames] = useQueryState(
+    "tags",
+    parseAsArrayOf(parseAsString).withDefault([]),
+  );
+
   const { toggleTag } = useQuestionFilter();
 
   const onToggleTag = (tag: Tag) => {
     toggleTag(tag);
-    setSelectedTags((prev) => {
-      const next = new Set(prev);
-      if (next.has(tag.name)) {
-        next.delete(tag.name);
+
+    setSelectedTagNames((prev) => {
+      if (prev.includes(tag.name)) {
+        return prev.filter((name) => name !== tag.name);
       } else {
-        next.add(tag.name);
+        return [...prev, tag.name];
       }
-      return next;
     });
   };
 
@@ -33,13 +35,13 @@ export const TagsSelect = ({ tags }: Props) => {
         Tags
       </p>
       {tags.map((tag) => {
-        const isSelected = selectedTags.has(tag.name);
+        const isSelected = selectedTagNames.includes(tag.name);
         return (
           <SidebarMenuItem
             key={tag.id}
             className={cn(
               "cursor-pointer text-sm px-2 py-1 rounded-md",
-              isSelected && "bg-muted font-semibold"
+              isSelected && "bg-muted font-semibold",
             )}
             onClick={() => onToggleTag(tag)}
           >
@@ -52,21 +54,22 @@ export const TagsSelect = ({ tags }: Props) => {
 };
 
 export const CompaniesSelect = ({ companies }: { companies: Company[] }) => {
-  const [selectedCompanies, setSelectedCompanies] = useState<Set<string>>(
-    new Set()
+  const [selectedCompanyNames, setSelectedCompanyNames] = useQueryState(
+    "companies",
+    parseAsArrayOf(parseAsString).withDefault([]),
   );
+
   const { toggleCompany } = useQuestionFilter();
 
   const onToggleCompany = (company: Company) => {
     toggleCompany(company);
-    setSelectedCompanies((prev) => {
-      const next = new Set(prev);
-      if (next.has(company.name)) {
-        next.delete(company.name);
+
+    setSelectedCompanyNames((prev) => {
+      if (prev.includes(company.name)) {
+        return prev.filter((name) => name !== company.name);
       } else {
-        next.add(company.name);
+        return [...prev, company.name];
       }
-      return next;
     });
   };
 
@@ -76,13 +79,13 @@ export const CompaniesSelect = ({ companies }: { companies: Company[] }) => {
         Companies
       </p>
       {companies.map((company) => {
-        const isSelected = selectedCompanies.has(company.name);
+        const isSelected = selectedCompanyNames.includes(company.name);
         return (
           <SidebarMenuItem
             key={company.id}
             className={cn(
               "cursor-pointer text-sm px-2 py-1 rounded-md",
-              isSelected && "bg-muted font-semibold"
+              isSelected && "bg-muted font-semibold",
             )}
             onClick={() => onToggleCompany(company)}
           >
