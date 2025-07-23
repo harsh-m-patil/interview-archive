@@ -32,12 +32,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
 export function NavUser() {
-  const { data: user, error, isPending } = useUser();
+  const { data: user, error, isPending, refetch } = useUser();
   const queryClient = useQueryClient();
   const { isMobile } = useSidebar();
 
-  // Handle error state
-  if (error || !user || isPending) {
+  if (error || !user || isPending || user === null) {
     return (
       <SidebarMenu>
         <SidebarMenuItem>
@@ -50,6 +49,14 @@ export function NavUser() {
       </SidebarMenu>
     );
   }
+
+  const handleLogout = async () => {
+    await signOut();
+    queryClient.invalidateQueries({
+      queryKey: ["session"],
+    });
+    refetch();
+  };
 
   return (
     <SidebarMenu>
@@ -117,14 +124,7 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={() => {
-                queryClient.invalidateQueries({
-                  queryKey: ["session"],
-                });
-                signOut();
-              }}
-            >
+            <DropdownMenuItem onClick={handleLogout}>
               <LogOut />
               Log out
             </DropdownMenuItem>

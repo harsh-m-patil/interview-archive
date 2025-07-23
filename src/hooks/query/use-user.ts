@@ -1,7 +1,8 @@
+import { User } from "@/generated/prisma";
 import { useQuery } from "@tanstack/react-query";
 
 export const useUser = () => {
-  return useQuery({
+  return useQuery<User | null>({
     queryKey: ["session"],
     queryFn: getUser,
     staleTime: Infinity,
