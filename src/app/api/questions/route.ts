@@ -13,7 +13,7 @@ export async function POST(request: Request) {
       return NextResponse.redirect(new URL("/sign-in", request.url));
     }
 
-    const { title, link, content, tags } = await request.json();
+    const { title, link, content, tags, companyId } = await request.json();
 
     const createdQuestion = await db.question.create({
       data: {
@@ -26,6 +26,7 @@ export async function POST(request: Request) {
               connect: tags.map((tagId: string) => ({ id: tagId })),
             }
           : undefined,
+        companyId,
       },
       include: {
         tags: true,
@@ -44,22 +45,39 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const tags = searchParams.get("tags")?.split(",").filter(Boolean) || [];
+    const companies =
+      searchParams.get("companies")?.split(",").filter(Boolean) || [];
+
+    const whereClause: any = {};
+
+    if (tags.length > 0) {
+      whereClause.tags = {
+        some: {
+          name: {
+            in: tags,
+          },
+        },
+      };
+    }
+
+    if (companies.length > 0) {
+      whereClause.Company = {
+        name: {
+          in: companies,
+        },
+      };
+    }
 
     const questions = await db.question.findMany({
-      where:
-        tags.length > 0
-          ? {
-              tags: {
-                some: {
-                  name: {
-                    in: tags,
-                  },
-                },
-              },
-            }
-          : {},
+      where: whereClause,
       include: {
         tags: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        Company: {
           select: {
             id: true,
             name: true,

@@ -25,14 +25,21 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { signOut, useSession } from "@/lib/auth-client";
+import { signOut } from "@/lib/auth-client";
+import { useUser } from "@/hooks/query/use-user";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function NavUser() {
-  const { data } = useSession();
-  const user = data?.user;
+  const { data: user, error, isPending } = useUser();
+  const queryClient = useQueryClient();
   const { isMobile } = useSidebar();
 
-  if (!user) {
+  if (isPending) {
+    return null;
+  }
+
+  // Handle error state
+  if (error || !user) {
     return null;
   }
 
@@ -48,7 +55,7 @@ export function NavUser() {
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user?.image!} alt={user.name} />
                 <AvatarFallback className="rounded-lg">
-                  {user.name.slice(0, 2)}
+                  {user.name?.slice(0, 2) || "?"}
                 </AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight">
@@ -68,7 +75,9 @@ export function NavUser() {
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <AvatarImage src={user.image!} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
+                  <AvatarFallback className="rounded-lg">
+                    {user.name?.slice(0, 2) || "?"}
+                  </AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
@@ -99,7 +108,14 @@ export function NavUser() {
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => signOut()}>
+            <DropdownMenuItem
+              onClick={() => {
+                queryClient.invalidateQueries({
+                  queryKey: ["session"],
+                });
+                signOut();
+              }}
+            >
               <LogOut />
               Log out
             </DropdownMenuItem>

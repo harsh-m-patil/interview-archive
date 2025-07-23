@@ -8,18 +8,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { QuestionsWithUser } from "@/types";
+import { QuestionsType } from "@/types";
 
-export const QuestionsCard = ({
-  question,
-}: {
-  question: QuestionsWithUser;
-}) => {
+export const QuestionsCard = ({ question }: { question: QuestionsType }) => {
   return (
-    <Card className="w-full h-full flex flex-col transition-all hover:shadow-md hover:scale-[1.02] group">
+    <Card className="w-full h-full flex flex-col transition-all hover:shadow-md hover:scale-[1.02] group min-w-xs">
       <CardHeader className="pb-3">
-        <CardTitle className="text-lg sm:text-xl leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-          {question.title}
+        <CardTitle className="flex justify-between text-lg sm:text-xl leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+          <p>{question.title}</p>
+          {question.Company && <Badge>{question.Company?.name}</Badge>}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pb-3">

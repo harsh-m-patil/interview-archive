@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -17,24 +11,23 @@ datasource db {
 model User {
   id            String     @id
   name          String
-  email         String
+  email         String     @unique
   emailVerified Boolean
   image         String?
   createdAt     DateTime
   updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
   answers       Answer[]
   questions     Question[]
+  accounts      Account[]
+  sessions      Session[]
 
-  @@unique([email])
   @@map("user")
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime
   updatedAt DateTime
   ipAddress String?
@@ -42,7 +35,6 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@map("session")
 }
 
@@ -51,7 +43,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -61,6 +52,7 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }
@@ -78,32 +70,31 @@ model Verification {
 
 model Question {
   id          String   @id @default(cuid())
-  title       String
-  content     String   @db.Text
-  link        String?
-  role        Role?    @relation(fields: [roleId], references: [id])
   roleId      String?
-  answers     Answer[]
-  tags        Tag[]    @relation("QuestionTags")
-  createdBy   User     @relation(fields: [createdById], references: [id])
   createdById String
-  Company     Company? @relation(fields: [companyId], references: [id])
   companyId   String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  content     String
+  link        String?
+  title       String
+  answers     Answer[]
+  Company     Company? @relation(fields: [companyId], references: [id])
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  role        Role?    @relation(fields: [roleId], references: [id])
+  tags        Tag[]    @relation("QuestionTags")
 }
 
 model Answer {
   id          String   @id @default(cuid())
-  content     String   @db.Text
+  content     String
   contentLink String?
-  question    Question @relation(fields: [questionId], references: [id])
   questionId  String
-  createdBy   User     @relation(fields: [createdById], references: [id])
   createdById String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  question    Question @relation(fields: [questionId], references: [id])
 }
 
 model Tag {

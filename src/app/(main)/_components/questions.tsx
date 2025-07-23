@@ -1,52 +1,13 @@
-import { QuestionFilterData } from "@/hooks/use-question-filters-store";
-import { useEffect, useState } from "react";
-import { QuestionsWithUser } from "@/types";
+import { useQuestionFilter } from "@/hooks/use-question-filters-store";
 import { QuestionsCard } from "./questions-card";
+import { useQuestions } from "@/hooks/query/use-questions";
 
-interface QuestionProps {
-  filters: QuestionFilterData;
-}
+export const Questions = () => {
+  const { filters } = useQuestionFilter();
+  const { isLoading, data: questions } = useQuestions(filters);
 
-export const Questions = ({ filters }: QuestionProps) => {
-  const [questions, setQuestions] = useState<QuestionsWithUser[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchQuestions = async () => {
-      try {
-        setIsLoading(true);
-        const tags = filters.Tags.map((tag) => tag.name).join(",");
-
-        let url = `/api/questions`;
-        if (tags) {
-          url += `?tags=${tags}`;
-        }
-        const response = await fetch(url);
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch questions");
-        }
-
-        const data = await response.json();
-        setQuestions(data);
-      } catch (error) {
-        console.error("Error fetching questions:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchQuestions();
-  }, [filters]);
-
-  if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <div key={index} className="h-64 bg-muted rounded-lg animate-pulse" />
-        ))}
-      </div>
-    );
+  if (isLoading || !questions) {
+    return null;
   }
 
   if (questions.length === 0) {

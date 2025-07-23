@@ -1,10 +1,12 @@
-import { Question } from "@/generated/prisma";
+import { Company, Question, Tag } from "@/generated/prisma";
 import { create } from "zustand";
 
-export type ModalType = "postQuestion";
+export type ModalType = "postQuestion" | "createCompany" | "createTag";
 
 interface ModalData {
   question?: Question;
+  company?: Company;
+  tag?: Tag;
 }
 
 interface ModalStore {
