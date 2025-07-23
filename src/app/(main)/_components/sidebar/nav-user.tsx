@@ -53,6 +53,7 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
+                {/* eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain */}
                 <AvatarImage src={user?.image!} alt={user.name} />
                 <AvatarFallback className="rounded-lg">
                   {user.name?.slice(0, 2) || "?"}
