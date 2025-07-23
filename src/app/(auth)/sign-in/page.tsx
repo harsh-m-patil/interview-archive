@@ -12,6 +12,7 @@ import { useState } from "react";
 import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
@@ -37,7 +38,7 @@ export default function SignIn() {
                 await signIn.social(
                   {
                     provider: "google",
-                    callbackURL: "/",
+                    callbackURL: "/questions",
                   },
                   {
                     onRequest: (ctx) => {
@@ -83,7 +84,7 @@ export default function SignIn() {
                 await signIn.social(
                   {
                     provider: "github",
-                    callbackURL: "/",
+                    callbackURL: "/questions",
                   },
                   {
                     onRequest: (ctx) => {

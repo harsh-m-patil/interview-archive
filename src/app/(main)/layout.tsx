@@ -13,7 +13,7 @@ export default function MainLayOut({
         <AppSidebar />
         <ModalProvider />
         <SidebarTrigger />
-        <div className="px-2 py-4">{children}</div>
+        <div className="w-full">{children}</div>
       </SidebarProvider>
     </>
   );

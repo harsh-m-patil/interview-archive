@@ -9,10 +9,17 @@ import {
 } from "@/components/ui/card";
 
 import { QuestionsType } from "@/types";
+import { redirect } from "next/navigation";
 
 export const QuestionsCard = ({ question }: { question: QuestionsType }) => {
+  const handleClick = () => {
+    redirect(`/questions/${question.id}`);
+  };
   return (
-    <Card className="w-full h-full flex flex-col transition-all hover:shadow-md hover:scale-[1.02] group min-w-xs">
+    <Card
+      onClick={handleClick}
+      className="w-full h-full flex flex-col transition-all hover:shadow-md hover:scale-[1.02] group"
+    >
       <CardHeader className="pb-3">
         <CardTitle className="flex justify-between text-lg sm:text-xl leading-tight line-clamp-2 group-hover:text-primary transition-colors">
           <p>{question.title}</p>

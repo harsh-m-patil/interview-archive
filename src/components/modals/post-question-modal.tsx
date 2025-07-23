@@ -43,6 +43,7 @@ import { PlusCircle, X, Check } from "lucide-react";
 import { useTags } from "@/hooks/query/use-tags";
 import { useCompanies } from "@/hooks/query/use-companies";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const formSchema = z
   .object({
@@ -120,6 +121,7 @@ export const PostQuestionModal = () => {
       queryClient.invalidateQueries({
         queryKey: ["questions"],
       });
+      toast.success("Question posted successfully!");
       form.reset();
       router.refresh();
       onClose();

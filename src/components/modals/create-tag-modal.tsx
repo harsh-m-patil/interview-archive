@@ -25,6 +25,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const formSchema = z.object({
   name: z.string(),
@@ -60,6 +61,7 @@ export const CreateTagModal = () => {
         queryKey: ["tags"],
       });
 
+      toast.success("Tag created successfully!");
       form.reset();
       router.refresh();
       onClose();
@@ -79,7 +81,7 @@ export const CreateTagModal = () => {
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="sr-only">Create a tag</DialogTitle>
           <DialogDescription className="text-center">
-            Create a company
+            Create a tag
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
