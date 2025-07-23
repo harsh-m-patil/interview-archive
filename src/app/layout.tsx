@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ReactQueryClientProvider } from "@/components/providers/query-provider";
 import { Toaster } from "@/components/ui/sonner";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Analytics } from "@vercel/analytics/next";
 
 import "./globals.css";
@@ -40,9 +39,7 @@ export default function RootLayout({
           storageKey="echo-theme"
           disableTransitionOnChange
         >
-          <ReactQueryClientProvider>
-            <NuqsAdapter>{children}</NuqsAdapter>
-          </ReactQueryClientProvider>
+          <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
           <Toaster richColors position="top-center" />
         </ThemeProvider>
         <Analytics />
