@@ -1,4 +1,3 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -7,6 +6,7 @@ import { CalendarDays, Clock, SquareArrowOutUpRight, User } from "lucide-react";
 import { AnswerQuestionButton } from "@/app/(main)/_components/answer-question-button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { UserAvatar } from "@/components/avatar";
 
 type QuestionPageProps = {
   params: Promise<{
@@ -25,15 +25,6 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
       hour: "2-digit",
       minute: "2-digit",
     });
-  };
-
-  const getInitials = (name: string) => {
-    return name
-      .split(" ")
-      .map((word) => word.charAt(0))
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
   };
 
   const question = await db.question.findFirst({
@@ -114,16 +105,7 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
               </h3>
 
               <div className="flex items-center space-x-4">
-                <Avatar className="h-12 w-12 lg:h-16 lg:w-16">
-                  <AvatarImage
-                    src={question.createdBy.image || "/placeholder.svg"}
-                    alt={question.createdBy.name}
-                  />
-                  <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                    {getInitials(question.createdBy.name)}
-                  </AvatarFallback>
-                </Avatar>
-
+                <UserAvatar src={question.createdBy.image!} />
                 <div className="space-y-1">
                   <p className="font-medium text-foreground lg:text-lg">
                     {question.createdBy.name}
@@ -232,15 +214,7 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
                     </div>
                     <div>
                       <div className="flex items-center gap-2 mt-2">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage
-                            src={answer.createdBy.image || "/placeholder.svg"}
-                            alt={answer.createdBy.name}
-                          />
-                          <AvatarFallback className="bg-primary/10 text-primary font-semibold">
-                            {getInitials(answer.createdBy.name)}
-                          </AvatarFallback>
-                        </Avatar>
+                        <UserAvatar src={answer.createdBy.image!} />
                         <span className="text-sm font-medium text-foreground">
                           {answer.createdBy.name}
                         </span>

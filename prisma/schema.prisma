@@ -20,6 +20,8 @@ model User {
   questions     Question[]
   accounts      Account[]
   sessions      Session[]
+  members       Member[]
+  groups        Group[]
 
   @@map("user")
 }
@@ -75,26 +77,36 @@ model Question {
   companyId   String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  content     String
-  link        String?
+  content     String   @db.Text
+  link        String?  @db.Text
   title       String
   answers     Answer[]
   Company     Company? @relation(fields: [companyId], references: [id])
   createdBy   User     @relation(fields: [createdById], references: [id])
   role        Role?    @relation(fields: [roleId], references: [id])
   tags        Tag[]    @relation("QuestionTags")
+
+  groupId String?
+  group   Group?  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@index([groupId])
+  @@index([createdById])
+  @@index([companyId])
+  @@index([roleId])
 }
 
 model Answer {
   id          String   @id @default(cuid())
-  content     String
-  contentLink String?
+  content     String   @db.Text
+  contentLink String?  @db.Text
   questionId  String
   createdById String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   createdBy   User     @relation(fields: [createdById], references: [id])
   question    Question @relation(fields: [questionId], references: [id])
+
+  @@index([questionId])
 }
 
 model Tag {
@@ -113,4 +125,45 @@ model Role {
   id        String     @id @default(cuid())
   name      String     @unique
   questions Question[]
+}
+
+model Group {
+  id         String  @id @default(cuid())
+  name       String  @unique
+  imageUrl   String? @db.Text
+  isPrivate  Boolean @default(true)
+  inviteCode String? @unique
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  members   Member[]
+  questions Question[]
+
+  @@index([userId])
+}
+
+enum MemberRole {
+  ADMIN
+  MODERATOR
+  GUEST
+}
+
+model Member {
+  id      String     @id @default(cuid())
+  userId  String
+  groupId String
+  role    MemberRole @default(GUEST)
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, groupId])
+  @@index([userId])
+  @@index([groupId])
 }

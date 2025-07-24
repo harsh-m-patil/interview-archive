@@ -13,13 +13,15 @@ export async function POST(request: Request) {
       return NextResponse.json("Login Please", { status: 401 });
     }
 
-    const { title, link, content, tags, companyId } = await request.json();
+    const { title, link, content, tags, companyId, groupId } =
+      await request.json();
 
     const createdQuestion = await db.question.create({
       data: {
         title,
         content,
         link,
+        groupId,
         createdById: session.user.id,
         tags: tags?.length
           ? {
@@ -41,31 +43,43 @@ export async function POST(request: Request) {
   }
 }
 
+// FIX: Should check if is in the group before gettings questions
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const tags = searchParams.get("tags")?.split(",").filter(Boolean) || [];
-    const companies =
+    const tagIds = searchParams.get("tags")?.split(",").filter(Boolean) || [];
+    const companyIds =
       searchParams.get("companies")?.split(",").filter(Boolean) || [];
+    const groupIds =
+      searchParams.get("groups")?.split(",").filter(Boolean) || [];
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const whereClause: any = {};
+    const whereClause: Record<string, unknown> = {};
 
-    if (tags.length > 0) {
+    if (tagIds.length > 0) {
       whereClause.tags = {
         some: {
-          name: {
-            in: tags,
+          id: {
+            in: tagIds,
           },
         },
       };
     }
 
-    if (companies.length > 0) {
+    if (companyIds.length > 0) {
       whereClause.Company = {
-        name: {
-          in: companies,
+        id: {
+          in: companyIds,
         },
+      };
+    }
+
+    if (groupIds.length > 0) {
+      whereClause.groupId = {
+        in: groupIds,
+      };
+    } else {
+      whereClause.groupId = {
+        equals: null,
       };
     }
 

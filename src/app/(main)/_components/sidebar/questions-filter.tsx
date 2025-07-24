@@ -1,8 +1,3 @@
-import {
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-} from "@/components/ui/sidebar";
 import { db } from "@/lib/db";
 import { Select } from "./select";
 
@@ -12,12 +7,5 @@ export const QuestionFilters = async () => {
     db.company.findMany(),
   ]);
 
-  return (
-    <SidebarGroup>
-      <SidebarGroupLabel>Filters</SidebarGroupLabel>
-      <SidebarMenu className="px-2">
-        <Select tags={tags} companies={companies} />
-      </SidebarMenu>
-    </SidebarGroup>
-  );
+  return <Select tags={tags} companies={companies} />;
 };

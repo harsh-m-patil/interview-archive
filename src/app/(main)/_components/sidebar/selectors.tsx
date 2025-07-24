@@ -1,94 +1,31 @@
 "use client";
-import { SidebarMenuItem } from "@/components/ui/sidebar";
-import { useQueryState, parseAsArrayOf, parseAsString } from "nuqs";
-import { cn } from "@/lib/utils";
 import { useQuestionFilter } from "@/hooks/use-question-filters-store";
-import { Company, Tag } from "@/generated/prisma";
+import { useGroups } from "@/hooks/query/use-groups";
+import { CollapsibleSelect } from "./collapsible-selector";
+import { Users } from "lucide-react";
 
-export const TagsSelect = ({ tags }: { tags: Tag[] }) => {
-  const [selectedTagNames, setSelectedTagNames] = useQueryState(
-    "tags",
-    parseAsArrayOf(parseAsString).withDefault([]),
-  );
+export const GroupsSelect = () => {
+  const { data, isLoading, error, isError } = useGroups();
 
-  const { toggleTag } = useQuestionFilter();
+  const { toggleGroup } = useQuestionFilter();
 
-  const onToggleTag = (tag: Tag) => {
-    toggleTag(tag);
-
-    setSelectedTagNames((prev) => {
-      if (prev.includes(tag.name)) {
-        return prev.filter((name) => name !== tag.name);
-      } else {
-        return [...prev, tag.name];
-      }
-    });
-  };
-
+  if (isLoading) {
+    return <p className="text-muted-foreground px-2">Loading groups...</p>;
+  }
+  if (isError) {
+    return (
+      <p className="text-red-500 px-2">Error loading groups: {error.message}</p>
+    );
+  }
+  if (!data || data.length === 0) {
+    return <p className="text-muted-foreground px-2">No groups found.</p>;
+  }
   return (
-    <>
-      <p className="text-foreground px-2 text-md border p-2 rounded-md bg-background/20">
-        Tags
-      </p>
-      {tags.map((tag) => {
-        const isSelected = selectedTagNames.includes(tag.name);
-        return (
-          <SidebarMenuItem
-            key={tag.id}
-            className={cn(
-              "cursor-pointer text-sm px-2 py-1 rounded-md",
-              isSelected && "bg-muted font-semibold",
-            )}
-            onClick={() => onToggleTag(tag)}
-          >
-            {tag.name}
-          </SidebarMenuItem>
-        );
-      })}
-    </>
-  );
-};
-
-export const CompaniesSelect = ({ companies }: { companies: Company[] }) => {
-  const [selectedCompanyNames, setSelectedCompanyNames] = useQueryState(
-    "companies",
-    parseAsArrayOf(parseAsString).withDefault([]),
-  );
-
-  const { toggleCompany } = useQuestionFilter();
-
-  const onToggleCompany = (company: Company) => {
-    toggleCompany(company);
-
-    setSelectedCompanyNames((prev) => {
-      if (prev.includes(company.name)) {
-        return prev.filter((name) => name !== company.name);
-      } else {
-        return [...prev, company.name];
-      }
-    });
-  };
-
-  return (
-    <>
-      <p className="text-foreground px-2 text-md border p-2 rounded-md bg-background/20">
-        Companies
-      </p>
-      {companies.map((company) => {
-        const isSelected = selectedCompanyNames.includes(company.name);
-        return (
-          <SidebarMenuItem
-            key={company.id}
-            className={cn(
-              "cursor-pointer text-sm px-2 py-1 rounded-md",
-              isSelected && "bg-muted font-semibold",
-            )}
-            onClick={() => onToggleCompany(company)}
-          >
-            {company.name}
-          </SidebarMenuItem>
-        );
-      })}
-    </>
+    <CollapsibleSelect
+      data={data}
+      queryKey="groups"
+      onToggle={toggleGroup}
+      icon={<Users className="size-4" />}
+    />
   );
 };
