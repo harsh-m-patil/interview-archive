@@ -8,6 +8,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { UserAvatar } from "@/components/avatar";
 import { formatDate } from "@/lib/date";
+import { AI } from "@/components/ai";
 
 type QuestionPageProps = {
   params: Promise<{
@@ -169,6 +170,8 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
             </div>
           </CardContent>
         </Card>
+
+        <AI question={question} />
 
         <Card className="shadow-sm w-full">
           <CardHeader>
