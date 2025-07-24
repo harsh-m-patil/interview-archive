@@ -30,7 +30,7 @@ export function AI({ question }: { question: Question }) {
               },
             });
           }}
-          disabled={isLoading || typeof question.aiAnswer === "string"}
+          disabled={isLoading || Boolean(question.aiAnswer)}
         >
           Generate
         </Button>
