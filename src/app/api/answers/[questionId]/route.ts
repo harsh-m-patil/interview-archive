@@ -1,6 +1,5 @@
-import { auth } from "@/lib/auth";
+import { currentUser } from "@/lib/current-user";
 import { db } from "@/lib/db";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(
@@ -8,11 +7,8 @@ export async function POST(
   { params }: { params: Promise<{ questionId: string }> },
 ) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
-
-    if (!session) {
+    const user = await currentUser();
+    if (!user) {
       return NextResponse.json("Login Please", { status: 401 });
     }
 
@@ -29,7 +25,7 @@ export async function POST(
         questionId,
         content,
         contentLink,
-        createdById: session.user.id,
+        createdById: user.id,
       },
     });
 

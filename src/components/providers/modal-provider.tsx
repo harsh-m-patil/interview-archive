@@ -6,6 +6,7 @@ import { CreateCompanyModal } from "@/components/modals/create-company-modal";
 import { CreateTagModal } from "@/components/modals/create-tag-modal";
 import { AnswerQuestionModal } from "@/components/modals/answer-question-modal";
 import { CreateGroupModal } from "@/components/modals/create-group-modal";
+import { JoinGroupModal } from "@/components/modals/join-group-modal";
 
 export function ModalProvider() {
   const [isMounted, setIsMounted] = useState(false);
@@ -25,6 +26,7 @@ export function ModalProvider() {
       <CreateTagModal />
       <AnswerQuestionModal />
       <CreateGroupModal />
+      <JoinGroupModal />
     </>
   );
 }

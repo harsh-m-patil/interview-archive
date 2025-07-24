@@ -7,6 +7,7 @@ import { AnswerQuestionButton } from "@/app/(main)/_components/answer-question-b
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { UserAvatar } from "@/components/avatar";
+import { formatDate } from "@/lib/date";
 
 type QuestionPageProps = {
   params: Promise<{
@@ -16,16 +17,6 @@ type QuestionPageProps = {
 
 export default async function QuestionPage({ params }: QuestionPageProps) {
   const { questionId } = await params;
-
-  const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
 
   const question = await db.question.findFirst({
     where: {

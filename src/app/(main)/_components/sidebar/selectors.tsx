@@ -2,7 +2,7 @@
 import { useQuestionFilter } from "@/hooks/use-question-filters-store";
 import { useGroups } from "@/hooks/query/use-groups";
 import { CollapsibleSelect } from "./collapsible-selector";
-import { Users } from "lucide-react";
+import { Loader, Users } from "lucide-react";
 
 export const GroupsSelect = () => {
   const { data, isLoading, error, isError } = useGroups();
@@ -10,7 +10,9 @@ export const GroupsSelect = () => {
   const { toggleGroup } = useQuestionFilter();
 
   if (isLoading) {
-    return <p className="text-muted-foreground px-2">Loading groups...</p>;
+    return (
+      <Loader className="size-4 animate-spin text-muted-foreground px-2" />
+    );
   }
   if (isError) {
     return (
@@ -22,8 +24,10 @@ export const GroupsSelect = () => {
   }
   return (
     <CollapsibleSelect
+      // @ts-expect-error
       data={data}
       queryKey="groups"
+      // @ts-expect-error
       onToggle={toggleGroup}
       icon={<Users className="size-4" />}
     />

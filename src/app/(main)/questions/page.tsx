@@ -1,6 +1,7 @@
 "use client";
 
-import { PostQuestion } from "../_components/post-question";
+import { Plus } from "lucide-react";
+import { ModalButton } from "../_components/modal-button";
 import { Questions } from "../_components/questions";
 
 export default function QuestionsPage() {
@@ -10,7 +11,9 @@ export default function QuestionsPage() {
         Questions Posted By the Community
       </h1>
       <div className="mb-6">
-        <PostQuestion />
+        <ModalButton action="postQuestion">
+          <Plus />
+        </ModalButton>
       </div>
       <Questions />
     </div>
