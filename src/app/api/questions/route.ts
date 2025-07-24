@@ -1,15 +1,12 @@
-import { auth } from "@/lib/auth";
+import { currentUser } from "@/lib/current-user";
 import { db } from "@/lib/db";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const session = await auth.api.getSession({
-      headers: await headers(),
-    });
+    const user = await currentUser();
 
-    if (!session) {
+    if (!user) {
       return NextResponse.json("Login Please", { status: 401 });
     }
 
@@ -22,7 +19,7 @@ export async function POST(request: Request) {
         content,
         link,
         groupId,
-        createdById: session.user.id,
+        createdById: user.id,
         tags: tags?.length
           ? {
               connect: tags.map((tagId: string) => ({ id: tagId })),
@@ -43,7 +40,6 @@ export async function POST(request: Request) {
   }
 }
 
-// FIX: Should check if is in the group before gettings questions
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -53,8 +49,10 @@ export async function GET(request: Request) {
     const groupIds =
       searchParams.get("groups")?.split(",").filter(Boolean) || [];
 
+    const user = await currentUser();
     const whereClause: Record<string, unknown> = {};
 
+    // Handle tag filtering
     if (tagIds.length > 0) {
       whereClause.tags = {
         some: {
@@ -65,6 +63,7 @@ export async function GET(request: Request) {
       };
     }
 
+    // Handle company filtering
     if (companyIds.length > 0) {
       whereClause.Company = {
         id: {
@@ -73,14 +72,42 @@ export async function GET(request: Request) {
       };
     }
 
-    if (groupIds.length > 0) {
-      whereClause.groupId = {
-        in: groupIds,
-      };
+    // Handle group filtering with proper membership check
+    if (!user) {
+      // If no user, only show public questions (no group)
+      whereClause.groupId = null;
+    } else if (groupIds.length > 0) {
+      // If specific groups requested, check user is member of those groups
+      whereClause.AND = [
+        {
+          groupId: {
+            in: groupIds,
+          },
+        },
+        {
+          group: {
+            members: {
+              some: {
+                userId: user.id,
+              },
+            },
+          },
+        },
+      ];
     } else {
-      whereClause.groupId = {
-        equals: null,
-      };
+      // If no specific groups requested, show public questions + user's group questions
+      whereClause.OR = [
+        { groupId: null }, // Public questions
+        {
+          group: {
+            members: {
+              some: {
+                userId: user.id,
+              },
+            },
+          },
+        }, // Questions from user's groups
+      ];
     }
 
     const questions = await db.question.findMany({
