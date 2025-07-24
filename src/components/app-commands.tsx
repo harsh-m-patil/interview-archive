@@ -79,6 +79,10 @@ export function AppCommands() {
               <Users />
               <span>Create a Group</span>
             </CommandItem>
+            <CommandItem onSelect={() => onSelect("joinGroup")}>
+              <Users />
+              <span>Join a Group</span>
+            </CommandItem>
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Shortcuts">

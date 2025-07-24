@@ -30,11 +30,13 @@ import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { UserAvatar } from "@/components/avatar";
+import { useRouter } from "next/navigation";
 
 export function NavUser() {
   const { data: user, error, isPending, refetch } = useUser();
   const queryClient = useQueryClient();
   const { isMobile } = useSidebar();
+  const router = useRouter();
 
   if (error || !user || isPending || user === null) {
     return (
@@ -99,7 +101,7 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push("/account")}>
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
