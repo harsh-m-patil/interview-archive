@@ -27,7 +27,7 @@ export async function PATCH(
         inviteCode,
         members: {
           some: {
-            id: user.id,
+            userId: user.id,
           },
         },
       },
