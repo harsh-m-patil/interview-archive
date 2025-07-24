@@ -16,6 +16,7 @@ import { NavUser } from "./sidebar/nav-user";
 import Link from "next/link";
 import { QuestionFilters } from "./sidebar/questions-filter";
 import { ModeToggle } from "@/components/theme-toggle";
+import { AppCommands } from "@/components/app-commands";
 
 const items = [
   {
@@ -73,6 +74,7 @@ export function AppSidebar() {
         <QuestionFilters />
       </SidebarContent>
       <SidebarFooter>
+        <AppCommands />
         <div className="flex justify-end gap-2 items-center border p-2 rounded-md">
           <NavUser />
           <ModeToggle />
