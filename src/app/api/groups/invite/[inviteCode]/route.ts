@@ -54,8 +54,6 @@ export async function PATCH(
       },
     });
 
-    console.log(group);
-
     return new Response("Successfully joined the group", { status: 201 });
   } catch (error) {
     console.error("[PATCH_GROUP]", error);
