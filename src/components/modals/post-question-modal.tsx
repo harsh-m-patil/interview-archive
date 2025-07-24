@@ -452,7 +452,7 @@ export const PostQuestionModal = () => {
                       </PopoverTrigger>
                       <PopoverContent className="p-0">
                         <Command>
-                          <CommandInput placeholder="Search companies..." />
+                          <CommandInput placeholder="Search groups..." />
                           <CommandList>
                             {loadingGroups ? (
                               <div className="flex items-center justify-center py-6">
