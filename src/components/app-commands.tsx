@@ -14,9 +14,11 @@ import {
   CommandShortcut,
 } from "@/components/ui/command";
 import { ModalType, useModal } from "@/hooks/use-modal-store";
+import { useSidebar } from "./ui/sidebar";
 
 export function AppCommands() {
   const [open, setOpen] = React.useState(false);
+  const { toggleSidebar } = useSidebar();
   const { onOpen } = useModal();
 
   React.useEffect(() => {
@@ -34,6 +36,11 @@ export function AppCommands() {
   const onSelect = (action: ModalType) => {
     setOpen(false);
     onOpen(action);
+  };
+
+  const selectSidebarToggle = () => {
+    setOpen(false);
+    toggleSidebar();
   };
 
   return (
@@ -64,14 +71,14 @@ export function AppCommands() {
           </CommandGroup>
           <CommandSeparator />
           <CommandGroup heading="Shortcuts">
-            <CommandItem>
+            <CommandItem onSelect={selectSidebarToggle}>
               <Sidebar />
               <span>Toggle Sidebar</span>
               <CommandShortcut>⌘B</CommandShortcut>
             </CommandItem>
-            <CommandItem>
+            <CommandItem onSelect={() => setOpen((prev) => !prev)}>
               <Command />
-              <span>Open Command Menu</span>
+              <span>Toggle Command Menu</span>
               <CommandShortcut>⌘K</CommandShortcut>
             </CommandItem>
           </CommandGroup>
