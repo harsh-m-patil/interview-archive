@@ -12,9 +12,14 @@ A comprehensive platform for storing, organizing, and sharing interview question
 ## Features
 
 - **Question Management**: Create, edit, and organize interview questions with detailed content
-- **Answer Tracking**: Provide and manage answers for interview questions
+- **AI-Powered Answers**: Generate intelligent answers for questions using AI completion
+- **Answer Tracking**: Provide and manage user-submitted answers for interview questions
+- **Group Collaboration**: Create private groups to share questions and collaborate with team members
+- **Invite System**: Invite users to groups using unique invite codes
+- **Role-Based Access**: Group membership with different roles (Admin, Moderator, Guest)
 - **Tagging System**: Categorize questions with custom tags for easy filtering
 - **Company & Role Filtering**: Filter questions by specific companies and job roles
+- **File Upload**: Upload images and attachments for questions and groups
 - **User Authentication**: Secure user management with Better Auth
 - **Responsive Design**: Modern UI built with shadcn/ui components and Tailwind CSS
 
@@ -26,6 +31,8 @@ A comprehensive platform for storing, organizing, and sharing interview question
 - **UI**: shadcn/ui components with Tailwind CSS
 - **State Management**: Zustand & TanStack Query
 - **Type Safety**: TypeScript with Zod validation
+- **AI Integration**: AI SDK for intelligent answer generation
+- **File Storage**: UploadThing for file uploads
 
 ## Getting Started
 
@@ -86,11 +93,13 @@ Open [http://localhost:3000](http://localhost:3000) to view the application.
 The application uses a PostgreSQL database with the following main entities:
 
 - **Users**: User accounts and authentication
-- **Questions**: Interview questions with content, titles, and metadata
+- **Questions**: Interview questions with content, titles, and AI-generated answers
 - **Answers**: User-provided answers to questions
 - **Tags**: Categorization system for questions
 - **Companies**: Company information for filtering
 - **Roles**: Job role information for filtering
+- **Groups**: Collaborative spaces for sharing questions within teams
+- **Members**: Group membership with role-based access control
 
 ## Contributing
 
