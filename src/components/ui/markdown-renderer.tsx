@@ -31,7 +31,7 @@ function CodeBlock({ children, className, ...props }: CodeComponentProps) {
         <Codebar lang={lang} codeString={String(children)} />
         <ShikiHighlighter
           language={lang}
-          theme={"material-theme-darker"}
+          theme={"catppuccin-mocha"}
           className="text-sm font-mono rounded-full"
           showLanguage={false}
         >
