@@ -6,7 +6,6 @@ import { NextResponse } from "next/server";
 export async function POST(request: Request) {
   try {
     const user = await currentUser();
-    console.log("[GROUP_POST] Current User:", user);
 
     if (!user) {
       return new Response("Unauthorized", { status: 401 });
