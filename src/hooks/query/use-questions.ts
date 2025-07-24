@@ -16,27 +16,16 @@ async function fetchQuestions({
   filters: QuestionFilterData;
 }): Promise<QuestionsType[]> {
   try {
-    const tags = filters.Tags.map((tag) => tag.name).join(",");
-    const companies = filters.Companies.map((company) => company.name).join(
-      ",",
-    );
-    let url = `/api/questions`;
+    const tags = filters.Tags.map((tag) => tag.id).join(",");
+    const companies = filters.Companies.map((company) => company.id).join(",");
+    const groups = filters.Groups.map((group) => group.id).join(",");
 
-    if (tags || companies) {
-      url += `?`;
-    }
+    const params = new URLSearchParams();
+    if (tags) params.set("tags", tags);
+    if (companies) params.set("companies", companies);
+    if (groups) params.set("groups", groups);
 
-    if (tags) {
-      url += `tags=${tags}`;
-    }
-
-    if (companies) {
-      if (tags) {
-        url += `&`;
-      }
-      url += `companies=${companies}`;
-    }
-
+    const url = `/api/questions${params.toString() ? `?${params.toString()}` : ""}`;
     const response = await fetch(url);
 
     if (!response.ok) {

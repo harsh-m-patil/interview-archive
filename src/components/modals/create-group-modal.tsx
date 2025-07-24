@@ -12,9 +12,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { FileUpload } from "@/components/file-upload";
 import {
   Form,
   FormControl,
@@ -28,42 +28,32 @@ import { useModal } from "@/hooks/use-modal-store";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
-const formSchema = z
-  .object({
-    content: z.string().optional(),
-    contentLink: z.url().optional(),
-  })
-  .refine((data) => data.content || data.contentLink, {
-    message: "Either content or link must be provided",
-    path: ["content", "link"],
-  });
+const formSchema = z.object({
+  name: z.string(),
+  imageUrl: z.string(),
+  isPrivate: z.boolean().default(true),
+});
 
-export const AnswerQuestionModal = () => {
-  const { isOpen, onClose, type, data } = useModal();
+export const CreateGroupModal = () => {
+  const { isOpen, onClose, type, onOpen } = useModal();
   const queryClient = useQueryClient();
   const router = useRouter();
 
-  const isModalOpen = isOpen && type === "answerQuestion";
+  const isModalOpen = isOpen && type === "createGroup";
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      content: "",
-      contentLink: undefined,
+      name: "",
+      imageUrl: "",
     },
   });
 
   const isLoading = form.formState.isSubmitting;
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const questionId = data?.questionId;
-
-      if (!questionId) {
-        toast.error("Question ID is required to post an answer.");
-        return;
-      }
-
-      const res = await fetch(`/api/answers/${questionId}`, {
+      const res = await fetch("/api/groups", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,15 +68,15 @@ export const AnswerQuestionModal = () => {
       }
 
       queryClient.invalidateQueries({
-        queryKey: ["questions"],
+        queryKey: ["groups"],
       });
 
-      if (res.status === 201) toast.success("answer posted successfully!");
+      if (res.status === 201) toast.success("Group created successfully!");
       form.reset();
       router.refresh();
       onClose();
     } catch (error) {
-      console.error("[PostQuestion] Error posting question:", error);
+      console.error("[CREATE_GROUP] Error  creating group:", error);
     }
   };
 
@@ -99,42 +89,41 @@ export const AnswerQuestionModal = () => {
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
-          <DialogTitle className="sr-only">Answer the question</DialogTitle>
+          <DialogTitle className="sr-only">Create a group</DialogTitle>
           <DialogDescription className="text-center">
-            Answer the question
+            Create a group to share questions and answers with others.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="space-y-2 px-6">
+            <div className="flex items-center justify-center text-center">
               <FormField
                 control={form.control}
-                name="content"
+                name="imageUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="sr-only">Answer Content</FormLabel>
                     <FormControl>
-                      <Textarea
-                        disabled={isLoading}
-                        placeholder="Enter answer content"
-                        {...field}
-                        className="h-32"
+                      <FileUpload
+                        endpoint="imageUploader"
+                        value={field.value}
+                        onChange={field.onChange}
                       />
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
+            </div>
+            <div className="space-y-2 px-6">
               <FormField
                 control={form.control}
-                name="contentLink"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="sr-only">Answer Link</FormLabel>
+                    <FormLabel className="sr-only">Group name</FormLabel>
                     <FormControl>
                       <Input
                         disabled={isLoading}
-                        placeholder="Enter answer link (optional)"
+                        placeholder="Group name"
                         {...field}
                       />
                     </FormControl>
@@ -144,7 +133,7 @@ export const AnswerQuestionModal = () => {
               />
             </div>
             <DialogFooter className="px-6 py-4">
-              <Button disabled={isLoading}>Answer</Button>
+              <Button disabled={isLoading}>Create</Button>
             </DialogFooter>
           </form>
         </Form>

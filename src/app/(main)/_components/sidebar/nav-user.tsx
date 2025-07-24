@@ -9,7 +9,6 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,6 +29,7 @@ import { useUser } from "@/hooks/query/use-user";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { UserAvatar } from "@/components/avatar";
 
 export function NavUser() {
   const { data: user, error, isPending, refetch } = useUser();
@@ -67,13 +67,7 @@ export function NavUser() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                {/* eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain */}
-                <AvatarImage src={user?.image!} alt={user.name} />
-                <AvatarFallback className="rounded-lg">
-                  {user.name?.slice(0, 2) || "?"}
-                </AvatarFallback>
-              </Avatar>
+              <UserAvatar src={user.image!} />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-medium">{user.name}</span>
                 <span className="truncate text-xs">{user.email}</span>
@@ -89,12 +83,7 @@ export function NavUser() {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.image!} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">
-                    {user.name?.slice(0, 2) || "?"}
-                  </AvatarFallback>
-                </Avatar>
+                <UserAvatar src={user.image!} />
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>

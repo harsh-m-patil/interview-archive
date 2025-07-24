@@ -1,5 +1,6 @@
 "use client";
 
+//TODO: make dropdown resuable
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -44,6 +45,8 @@ import { useTags } from "@/hooks/query/use-tags";
 import { useCompanies } from "@/hooks/query/use-companies";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useGroups } from "@/hooks/query/use-groups";
+import { UserAvatar } from "../avatar";
 
 const formSchema = z
   .object({
@@ -52,6 +55,7 @@ const formSchema = z
     link: z.url().optional(),
     tags: z.array(z.string()).optional(),
     companyId: z.string().optional(),
+    groupId: z.string().optional(),
   })
   .refine((data) => data.content || data.link, {
     message: "Either content or link must be provided",
@@ -73,6 +77,7 @@ export const PostQuestionModal = () => {
       link: undefined,
       tags: [],
       companyId: undefined,
+      groupId: undefined,
     },
   });
 
@@ -84,9 +89,15 @@ export const PostQuestionModal = () => {
     isLoading: loadingCompanies,
     error: companiesError,
   } = useCompanies();
+  const {
+    data: allGroups,
+    isLoading: loadingGroups,
+    error: groupsError,
+  } = useGroups();
 
   const selectedTags = form.watch("tags");
   const selectedCompany = form.watch("companyId");
+  const selectedGroup = form.watch("groupId");
 
   const toggleTag = (tagId: string) => {
     const current = form.getValues("tags") || [];
@@ -108,6 +119,13 @@ export const PostQuestionModal = () => {
     form.setValue("companyId", undefined);
   };
 
+  const selectGroup = (groupId: string) => {
+    form.setValue("groupId", groupId);
+  };
+
+  const clearGroup = () => {
+    form.setValue("groupId", undefined);
+  };
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const res = await fetch("/api/questions", {
@@ -145,6 +163,11 @@ export const PostQuestionModal = () => {
   // Get selected company name for display
   const selectedCompanyName = selectedCompany
     ? allCompanies?.find((company) => company.id === selectedCompany)?.name
+    : null;
+
+  // Get selected group name for display
+  const selectedGroupName = selectedGroup
+    ? allGroups?.find((group) => group.id === selectedGroup)?.name
     : null;
 
   return (
@@ -381,6 +404,108 @@ export const PostQuestionModal = () => {
                                   >
                                     {company.name}
                                     {selectedCompany === company.id && (
+                                      <Check className="ml-auto h-4 w-4 text-primary" />
+                                    )}
+                                  </CommandItem>
+                                ))}
+                              </>
+                            )}
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Group Selector - Single Selection */}
+              <FormField
+                control={form.control}
+                name="groupId"
+                render={() => (
+                  <FormItem>
+                    <FormLabel className="sr-only">Group</FormLabel>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full justify-between text-left"
+                          disabled={isLoading || loadingGroups}
+                        >
+                          <span>
+                            {loadingGroups
+                              ? "Loading groups..."
+                              : selectedGroupName || "Select a group"}
+                          </span>
+                          {selectedGroup && (
+                            <X
+                              className="h-4 w-4 text-muted-foreground hover:text-foreground"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                clearGroup();
+                              }}
+                            />
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="p-0">
+                        <Command>
+                          <CommandInput placeholder="Search companies..." />
+                          <CommandList>
+                            {loadingGroups ? (
+                              <div className="flex items-center justify-center py-6">
+                                <div className="text-sm text-muted-foreground">
+                                  Loading groups...
+                                </div>
+                              </div>
+                            ) : groupsError ? (
+                              <div className="flex items-center justify-center py-6">
+                                <div className="text-sm text-destructive">
+                                  Failed to load groups
+                                </div>
+                              </div>
+                            ) : !allGroups || allGroups.length === 0 ? (
+                              <CommandEmpty className="flex justify-between items-center p-2 text-sm">
+                                No groups available.
+                                <Button
+                                  className="size-5"
+                                  variant="ghost"
+                                  onClick={() => onOpen("createGroup")}
+                                >
+                                  <PlusCircle className="size-4" />
+                                </Button>
+                              </CommandEmpty>
+                            ) : (
+                              <>
+                                <CommandEmpty className="flex justify-between items-center p-2 text-sm">
+                                  No groups available.
+                                  <Button
+                                    className="size-5"
+                                    variant="ghost"
+                                    onClick={() => onOpen("createGroup")}
+                                  >
+                                    <PlusCircle className="size-4" />
+                                  </Button>
+                                </CommandEmpty>
+                                {allGroups.map((group) => (
+                                  <CommandItem
+                                    key={group.id}
+                                    onSelect={() => selectGroup(group.id)}
+                                    className={cn(
+                                      "cursor-pointer",
+                                      selectedGroup === group.id && "bg-muted",
+                                    )}
+                                  >
+                                    <div className="px-4 flex items-center gap-2">
+                                      <UserAvatar
+                                        src={group.imageUrl!}
+                                        className="size-4 md:size-4"
+                                      />
+                                      {group.name}
+                                    </div>
+                                    {selectedGroup === group.id && (
                                       <Check className="ml-auto h-4 w-4 text-primary" />
                                     )}
                                   </CommandItem>

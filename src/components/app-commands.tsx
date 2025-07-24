@@ -1,7 +1,14 @@
 "use client";
 
 import * as React from "react";
-import { BadgeQuestionMark, Command, Sidebar, Tag, Users } from "lucide-react";
+import {
+  BadgeQuestionMark,
+  Building,
+  Command,
+  Sidebar,
+  Tag,
+  Users,
+} from "lucide-react";
 
 import {
   CommandDialog,
@@ -65,8 +72,12 @@ export function AppCommands() {
               <span>Create a Tag</span>
             </CommandItem>
             <CommandItem onSelect={() => onSelect("createCompany")}>
-              <Users />
+              <Building />
               <span>Add a Company</span>
+            </CommandItem>
+            <CommandItem onSelect={() => onSelect("createGroup")}>
+              <Users />
+              <span>Create a Group</span>
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
