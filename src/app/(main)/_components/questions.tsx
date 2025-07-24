@@ -1,16 +1,22 @@
 import { useQuestionFilter } from "@/hooks/use-question-filters-store";
-import { QuestionsCard } from "./questions-card";
+import { QuestionsCard, SkeletonCard } from "./questions-card";
 import { useQuestions } from "@/hooks/query/use-questions";
 
 export const Questions = () => {
   const { filters } = useQuestionFilter();
   const { isLoading, data: questions } = useQuestions(filters);
 
-  if (isLoading || !questions) {
-    return null;
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-6">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <SkeletonCard key={index} />
+        ))}
+      </div>
+    );
   }
 
-  if (questions.length === 0) {
+  if (!questions || questions?.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
         <div className="text-muted-foreground mb-2">

@@ -7,9 +7,41 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 import { QuestionsType } from "@/types";
 import { redirect } from "next/navigation";
+
+export const SkeletonCard = () => {
+  return (
+    <Card className="w-full h-full flex flex-col">
+      <CardHeader className="pb-3">
+        <div className="flex justify-between items-start">
+          <Skeleton className="h-6 w-3/4" />
+          <Skeleton className="h-6 w-16" />
+        </div>
+      </CardHeader>
+      <CardContent className="flex-1 pb-3">
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-full" />
+          <Skeleton className="h-4 w-2/3" />
+        </div>
+      </CardContent>
+      <CardFooter className="flex flex-col gap-3 pt-3 mt-auto">
+        <div className="flex items-center gap-2 w-full">
+          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="h-4 w-24" />
+        </div>
+        <div className="flex flex-wrap gap-1.5 w-full">
+          <Skeleton className="h-5 w-12" />
+          <Skeleton className="h-5 w-16" />
+          <Skeleton className="h-5 w-14" />
+        </div>
+      </CardFooter>
+    </Card>
+  );
+};
 
 export const QuestionsCard = ({ question }: { question: QuestionsType }) => {
   const handleClick = () => {
