@@ -23,7 +23,7 @@ export function AI({ question }: { question: Question }) {
         </p>
         <Button
           onClick={async () => {
-            toast.success("Generating AI answer...");
+            toast.loading("Generating AI answer...");
             await complete(prompt, {
               body: {
                 questionId: question.id,
