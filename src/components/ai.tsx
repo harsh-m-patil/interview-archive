@@ -15,6 +15,22 @@ export function AI({ question }: { question: Question }) {
 
   const prompt = `Title: ${question.title},Content: ${question.content}`;
 
+  const handleClick = async () => {
+    const promise = complete(prompt, {
+      body: {
+        questionId: question.id,
+      },
+    });
+
+    toast.promise(promise, {
+      loading: "Generating answer...",
+      success: () => {
+        return "Answer generated successfully!";
+      },
+      error: "Error generating answer",
+    });
+  };
+
   return (
     <div className="border p-2 rounded-md shadow-md bg-background">
       <div className="flex justify-between px-4 py-2">
@@ -22,15 +38,8 @@ export function AI({ question }: { question: Question }) {
           <Sparkles /> AI Generated Answer
         </p>
         <Button
-          onClick={async () => {
-            toast.loading("Generating AI answer...");
-            await complete(prompt, {
-              body: {
-                questionId: question.id,
-              },
-            });
-          }}
-          disabled={isLoading || Boolean(question.aiAnswer)}
+          onClick={handleClick}
+          disabled={isLoading || Boolean(question.aiAnswer || completion)}
         >
           Generate
         </Button>
