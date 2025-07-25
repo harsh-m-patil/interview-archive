@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const { name } = await request.json();
-    const role = await db.tag.create({
+    const role = await db.role.create({
       data: {
         name,
       },
