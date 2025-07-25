@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/hooks/query/use-user";
 import { useModal } from "@/hooks/use-modal-store";
+import { useMounted } from "@/hooks/use-mounted";
 import { QuestionsType } from "@/types";
 
 interface EditQuestionButtonProps {
@@ -11,12 +12,13 @@ interface EditQuestionButtonProps {
 export function EditQuestionButton({ question }: EditQuestionButtonProps) {
   const { data: user, isLoading } = useUser();
   const { onOpen } = useModal();
+  const mounted = useMounted();
 
-  if (!user || isLoading || question.createdById !== user.id) {
+  if (!mounted) {
     return null;
   }
 
-  if (typeof window === "undefined") {
+  if (!user || isLoading || question.createdById !== user.id) {
     return null;
   }
 

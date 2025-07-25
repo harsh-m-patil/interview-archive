@@ -1,5 +1,13 @@
 "use client";
-import { memo, useMemo, useState, createContext, useContext } from "react";
+import {
+  memo,
+  useMemo,
+  useState,
+  createContext,
+  useContext,
+  useRef,
+  useEffect,
+} from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
@@ -120,6 +128,17 @@ const MemoizedMarkdown = memo(
   }) => {
     const blocks = useMemo(() => parseMarkdownIntoBlocks(content), [content]);
 
+    const containerRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+      if (containerRef.current) {
+        containerRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    }, [content]);
+
     const proseClasses =
       size === "small"
         ? "prose prose-sm dark:prose-invert bread-words max-w-none w-full prose-code:before:content-none prose-code:after:content-none"
@@ -127,7 +146,7 @@ const MemoizedMarkdown = memo(
 
     return (
       <MarkdownSizeContext.Provider value={size}>
-        <div className={proseClasses}>
+        <div ref={containerRef} className={proseClasses}>
           {blocks.map((block, index) => (
             <MarkdownRendererBlock
               content={block}

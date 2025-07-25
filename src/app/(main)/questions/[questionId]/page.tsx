@@ -1,5 +1,10 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { db } from "@/lib/db";
 import { CalendarDays, Clock, SquareArrowOutUpRight, User } from "lucide-react";
@@ -10,6 +15,7 @@ import { UserAvatar } from "@/components/avatar";
 import { formatDate } from "@/lib/date";
 import { AI } from "@/components/ai";
 import { EditQuestionButton } from "../../_components/edit-question-button";
+import { AIEvaluation } from "@/components/ai-evalution";
 
 type QuestionPageProps = {
   params: Promise<{
@@ -215,6 +221,16 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
                       </p>
                     </div>
                   </CardContent>
+                  <CardFooter>
+                    <AIEvaluation
+                      question={{
+                        title: question.title,
+                        content: question.content,
+                        role: question.role?.name || null,
+                      }}
+                      answer={answer}
+                    />
+                  </CardFooter>
                 </Card>
               ))}
           </CardContent>
