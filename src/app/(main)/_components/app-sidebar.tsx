@@ -14,9 +14,9 @@ import {
 } from "@/components/ui/sidebar";
 import { NavUser } from "./sidebar/nav-user";
 import Link from "next/link";
-import { QuestionFilters } from "./sidebar/questions-filter";
 import { ModeToggle } from "@/components/theme-toggle";
 import { AppCommands } from "@/components/app-commands";
+import { QuestionFilters } from "./sidebar/selectors";
 
 const items = [
   {
