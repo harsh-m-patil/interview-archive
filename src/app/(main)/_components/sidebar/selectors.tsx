@@ -2,11 +2,19 @@
 import { useQuestionFilter } from "@/hooks/use-question-filters-store";
 import { useGroups } from "@/hooks/query/use-groups";
 import { CollapsibleSelect } from "./collapsible-selector";
-import { Loader, Users } from "lucide-react";
+import {
+  Building,
+  ChevronRight,
+  Loader,
+  Tags,
+  Users,
+  UserSearch,
+} from "lucide-react";
 import { useCompanies } from "@/hooks/query/use-companies";
 import { useTags } from "@/hooks/query/use-tags";
-import { useRouter } from "next/router";
 import { useRoles } from "@/hooks/query/use-roles";
+import { Collapsible, CollapsibleTrigger } from "@radix-ui/react-collapsible";
+import { SidebarGroup, SidebarGroupLabel } from "@/components/ui/sidebar";
 
 const GroupsSelect = () => {
   const { data, isLoading, error, isError } = useGroups();
@@ -15,7 +23,22 @@ const GroupsSelect = () => {
 
   if (isLoading) {
     return (
-      <Loader className="size-4 animate-spin text-muted-foreground px-2" />
+      <Collapsible className="group/collapsible">
+        <SidebarGroup>
+          <SidebarGroupLabel
+            asChild
+            className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm"
+          >
+            <CollapsibleTrigger>
+              <div className="flex items-center gap-2">
+                <Users className="size-4" />
+                <p className="capitalize text-md">Groups</p>
+              </div>
+              <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+            </CollapsibleTrigger>
+          </SidebarGroupLabel>
+        </SidebarGroup>
+      </Collapsible>
     );
   }
   if (isError) {
@@ -41,7 +64,22 @@ const CompaniesSelect = () => {
   const { toggleCompany } = useQuestionFilter();
   if (isLoading) {
     return (
-      <Loader className="size-4 animate-spin text-muted-foreground px-2" />
+      <Collapsible className="group/collapsible">
+        <SidebarGroup>
+          <SidebarGroupLabel
+            asChild
+            className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm"
+          >
+            <CollapsibleTrigger>
+              <div className="flex items-center gap-2">
+                <Building className="size-4" />
+                <p className="capitalize text-md">Companies</p>
+              </div>
+              <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+            </CollapsibleTrigger>
+          </SidebarGroupLabel>
+        </SidebarGroup>
+      </Collapsible>
     );
   }
   if (isError) {
@@ -59,7 +97,7 @@ const CompaniesSelect = () => {
       data={{ type: "company", data: data }}
       queryKey="companies"
       onToggle={toggleCompany}
-      icon={<Users className="size-4" />}
+      icon={<Building className="size-4" />}
     />
   );
 };
@@ -69,7 +107,22 @@ const TagsSelect = () => {
   const { toggleTag } = useQuestionFilter();
   if (isLoading) {
     return (
-      <Loader className="size-4 animate-spin text-muted-foreground px-2" />
+      <Collapsible className="group/collapsible">
+        <SidebarGroup>
+          <SidebarGroupLabel
+            asChild
+            className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm"
+          >
+            <CollapsibleTrigger>
+              <div className="flex items-center gap-2">
+                <Tags className="size-4" />
+                <p className="capitalize text-md">Tags</p>
+              </div>
+              <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+            </CollapsibleTrigger>
+          </SidebarGroupLabel>
+        </SidebarGroup>
+      </Collapsible>
     );
   }
   if (isError) {
@@ -85,7 +138,7 @@ const TagsSelect = () => {
       data={{ type: "tag", data }}
       queryKey="tags"
       onToggle={toggleTag}
-      icon={<Users className="size-4" />}
+      icon={<Tags className="size-4" />}
     />
   );
 };
@@ -96,7 +149,24 @@ const RolesSelect = () => {
 
   if (isLoading) {
     return (
-      <Loader className="size-4 animate-spin text-muted-foreground px-2" />
+      <>
+        <Collapsible className="group/collapsible">
+          <SidebarGroup>
+            <SidebarGroupLabel
+              asChild
+              className="group/label text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground text-sm"
+            >
+              <CollapsibleTrigger>
+                <div className="flex items-center gap-2">
+                  <UserSearch className="size-4" />
+                  <p className="capitalize text-md">Roles</p>
+                </div>
+                <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+              </CollapsibleTrigger>
+            </SidebarGroupLabel>
+          </SidebarGroup>
+        </Collapsible>
+      </>
     );
   }
   if (isError) {
@@ -113,7 +183,7 @@ const RolesSelect = () => {
       data={{ type: "role", data }}
       queryKey="roles"
       onToggle={toggleRole}
-      icon={<Users className="size-4" />}
+      icon={<UserSearch className="size-4" />}
     />
   );
 };

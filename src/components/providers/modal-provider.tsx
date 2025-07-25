@@ -8,6 +8,7 @@ import { AnswerQuestionModal } from "@/components/modals/answer-question-modal";
 import { CreateGroupModal } from "@/components/modals/create-group-modal";
 import { JoinGroupModal } from "@/components/modals/join-group-modal";
 import { CreateRoleModal } from "@/components/modals/create-role-modal";
+import { EditQuestionModal } from "@/components/modals/edit-question-modal";
 
 export function ModalProvider() {
   const [isMounted, setIsMounted] = useState(false);
@@ -23,6 +24,7 @@ export function ModalProvider() {
   return (
     <>
       <PostQuestionModal />
+      <EditQuestionModal />
       <CreateCompanyModal />
       <CreateTagModal />
       <AnswerQuestionModal />

@@ -1,7 +1,8 @@
-import { Company, Question, Tag, User } from "./generated/prisma";
+import { Company, Question, Role, Tag, User } from "./generated/prisma";
 
 export type QuestionsType = Question & {
   createdBy: User;
   tags: Tag[];
-  Company?: Company;
+  Company?: Company | null;
+  role: Role | null;
 };

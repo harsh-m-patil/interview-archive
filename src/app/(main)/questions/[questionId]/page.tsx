@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { UserAvatar } from "@/components/avatar";
 import { formatDate } from "@/lib/date";
 import { AI } from "@/components/ai";
+import { EditQuestionButton } from "../../_components/edit-question-button";
 
 type QuestionPageProps = {
   params: Promise<{
@@ -27,14 +28,7 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
       tags: true,
       Company: true,
       role: true,
-      createdBy: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-          emailVerified: true,
-        },
-      },
+      createdBy: true,
       answers: {
         include: {
           createdBy: true,
@@ -57,9 +51,12 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
           <CardHeader className="space-y-4">
             {/* Title */}
             <div className="space-y-2">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight text-foreground">
-                {question.title}
-              </h1>
+              <div className="flex justify-between items-center">
+                <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold leading-tight text-foreground">
+                  {question.title}
+                </h1>
+                <EditQuestionButton question={question} />
+              </div>
               {/* Tags */}
               <div className="flex flex-wrap gap-2">
                 {question.tags.map((tag) => (
