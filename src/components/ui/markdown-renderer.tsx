@@ -1,3 +1,4 @@
+"use client";
 import { memo, useMemo, useState, createContext, useContext } from "react";
 import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -8,6 +9,7 @@ import ShikiHighlighter from "react-shiki";
 import type { ComponentProps } from "react";
 import type { ExtraProps } from "react-markdown";
 import { Check, Copy } from "lucide-react";
+import { useTheme } from "next-themes";
 
 type CodeComponentProps = ComponentProps<"code"> & ExtraProps;
 type MarkdownSize = "default" | "small";
@@ -23,6 +25,7 @@ const components: Components = {
 function CodeBlock({ children, className, ...props }: CodeComponentProps) {
   const size = useContext(MarkdownSizeContext);
   const match = /language-(\w+)/.exec(className || "");
+  const { theme } = useTheme();
 
   if (match) {
     const lang = match[1];
@@ -31,9 +34,9 @@ function CodeBlock({ children, className, ...props }: CodeComponentProps) {
         <Codebar lang={lang} codeString={String(children)} />
         <ShikiHighlighter
           language={lang}
-          theme={"catppuccin-mocha"}
+          theme={theme === "dark" ? "catppuccin-mocha" : "github-light"}
           className="text-sm font-mono rounded-full"
-          showLanguage={false}
+          showLanguage={true}
         >
           {String(children)}
         </ShikiHighlighter>
