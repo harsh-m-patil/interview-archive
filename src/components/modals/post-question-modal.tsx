@@ -1,6 +1,5 @@
 "use client";
 
-//TODO: make dropdown resuable
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,29 +23,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Command,
-  CommandInput,
-  CommandItem,
-  CommandList,
-  CommandEmpty,
-} from "@/components/ui/command";
+import { SelectorDropdown } from "@/components/ui/selector-dropdown";
 
-import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
-import { PlusCircle, X, Check } from "lucide-react";
 import { useTags } from "@/hooks/query/use-tags";
 import { useCompanies } from "@/hooks/query/use-companies";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useGroups } from "@/hooks/query/use-groups";
 import { UserAvatar } from "../avatar";
+import { Check } from "lucide-react";
+import { useRoles } from "@/hooks/query/use-roles";
 
 const formSchema = z
   .object({
@@ -54,6 +42,7 @@ const formSchema = z
     content: z.string().optional(),
     link: z.url().optional(),
     tags: z.array(z.string()).optional(),
+    roleId: z.string().optional(),
     companyId: z.string().optional(),
     groupId: z.string().optional(),
   })
@@ -78,12 +67,18 @@ export const PostQuestionModal = () => {
       tags: [],
       companyId: undefined,
       groupId: undefined,
+      roleId: undefined,
     },
   });
 
   const isLoading = form.formState.isSubmitting;
 
   const { data: allTags, isLoading: loadingTags, error: tagsError } = useTags();
+  const {
+    data: allRoles,
+    isLoading: loadingRoles,
+    error: rolesError,
+  } = useRoles();
   const {
     data: allCompanies,
     isLoading: loadingCompanies,
@@ -98,34 +93,28 @@ export const PostQuestionModal = () => {
   const selectedTags = form.watch("tags");
   const selectedCompany = form.watch("companyId");
   const selectedGroup = form.watch("groupId");
+  const selectedRole = form.watch("roleId");
 
   const toggleTag = (tagId: string) => {
     const current = form.getValues("tags") || [];
     if (current.includes(tagId)) {
       form.setValue(
         "tags",
-        current.filter((id) => id !== tagId),
+        current.filter((id) => id !== tagId)
       );
     } else {
       form.setValue("tags", [...current, tagId]);
     }
   };
 
-  const selectCompany = (companyId: string) => {
-    form.setValue("companyId", companyId);
+  const setId = (field: "companyId" | "groupId" | "roleId", id: string) => {
+    form.setValue(field, id);
   };
 
-  const clearCompany = () => {
-    form.setValue("companyId", undefined);
+  const clearId = (value: "companyId" | "groupId" | "roleId") => {
+    form.setValue(value, undefined);
   };
 
-  const selectGroup = (groupId: string) => {
-    form.setValue("groupId", groupId);
-  };
-
-  const clearGroup = () => {
-    form.setValue("groupId", undefined);
-  };
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       const res = await fetch("/api/questions", {
@@ -159,16 +148,6 @@ export const PostQuestionModal = () => {
     form.reset();
     onClose();
   };
-
-  // Get selected company name for display
-  const selectedCompanyName = selectedCompany
-    ? allCompanies?.find((company) => company.id === selectedCompany)?.name
-    : null;
-
-  // Get selected group name for display
-  const selectedGroupName = selectedGroup
-    ? allGroups?.find((group) => group.id === selectedGroup)?.name
-    : null;
 
   return (
     <Dialog open={isModalOpen} onOpenChange={handleClose}>
@@ -241,82 +220,33 @@ export const PostQuestionModal = () => {
                 render={() => (
                   <FormItem>
                     <FormLabel className="sr-only">Tags</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full justify-start text-left"
-                          disabled={isLoading || loadingTags}
-                        >
-                          {loadingTags
-                            ? "Loading tags..."
-                            : selectedTags?.length === 0
-                              ? "Select tags"
-                              : `${selectedTags?.length} tag(s) selected`}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="p-0">
-                        <Command>
-                          <CommandInput placeholder="Search tags..." />
-                          <CommandList>
-                            {loadingTags ? (
-                              <div className="flex items-center justify-center py-6">
-                                <div className="text-sm text-muted-foreground">
-                                  Loading tags...
-                                </div>
-                              </div>
-                            ) : tagsError ? (
-                              <div className="flex items-center justify-center py-6">
-                                <div className="text-sm text-destructive">
-                                  Failed to load tags
-                                </div>
-                              </div>
-                            ) : !allTags || allTags.length === 0 ? (
-                              <CommandEmpty className="flex justify-between items-center p-2 text-sm">
-                                No tags available.
-                                <Button
-                                  className="size-5"
-                                  variant="ghost"
-                                  onClick={() => onOpen("createTag")}
-                                >
-                                  <PlusCircle className="size-4" />
-                                </Button>
-                              </CommandEmpty>
-                            ) : (
-                              <>
-                                <CommandEmpty className="flex justify-between items-center p-2 text-sm">
-                                  No tags available.
-                                  <Button
-                                    className="size-5"
-                                    variant="ghost"
-                                    onClick={() => onOpen("createTag")}
-                                  >
-                                    <PlusCircle className="size-4" />
-                                  </Button>
-                                </CommandEmpty>
-                                {allTags.map((tag) => (
-                                  <CommandItem
-                                    key={tag.id}
-                                    onSelect={() => toggleTag(tag.id)}
-                                    className={cn(
-                                      "cursor-pointer",
-                                      selectedTags?.includes(tag.id) &&
-                                        "bg-muted",
-                                    )}
-                                  >
-                                    {tag.name}
-                                    {selectedTags?.includes(tag.id) && (
-                                      <X className="ml-auto h-4 w-4 text-muted-foreground" />
-                                    )}
-                                  </CommandItem>
-                                ))}
-                              </>
-                            )}
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                    <SelectorDropdown
+                      options={allTags}
+                      isLoading={loadingTags}
+                      error={tagsError}
+                      selectedValues={selectedTags}
+                      isMultiSelect={true}
+                      placeholder="Select tags"
+                      searchPlaceholder="Search tags..."
+                      emptyMessage="No tags available."
+                      getDisplayText={(selectedValues) => {
+                        if (
+                          !selectedValues ||
+                          (Array.isArray(selectedValues) &&
+                            selectedValues.length === 0)
+                        ) {
+                          return "Select tags";
+                        }
+                        return `${
+                          Array.isArray(selectedValues)
+                            ? selectedValues.length
+                            : 1
+                        } tag(s) selected`;
+                      }}
+                      onSelect={toggleTag}
+                      onCreateNew={() => onOpen("createTag")}
+                      disabled={isLoading}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -329,91 +259,61 @@ export const PostQuestionModal = () => {
                 render={() => (
                   <FormItem>
                     <FormLabel className="sr-only">Company</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full justify-between text-left"
-                          disabled={isLoading || loadingCompanies}
-                        >
-                          <span>
-                            {loadingCompanies
-                              ? "Loading companies..."
-                              : selectedCompanyName || "Select a company"}
-                          </span>
-                          {selectedCompany && (
-                            <X
-                              className="h-4 w-4 text-muted-foreground hover:text-foreground"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                clearCompany();
-                              }}
-                            />
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="p-0">
-                        <Command>
-                          <CommandInput placeholder="Search companies..." />
-                          <CommandList>
-                            {loadingCompanies ? (
-                              <div className="flex items-center justify-center py-6">
-                                <div className="text-sm text-muted-foreground">
-                                  Loading companies...
-                                </div>
-                              </div>
-                            ) : companiesError ? (
-                              <div className="flex items-center justify-center py-6">
-                                <div className="text-sm text-destructive">
-                                  Failed to load companies
-                                </div>
-                              </div>
-                            ) : !allCompanies || allCompanies.length === 0 ? (
-                              <CommandEmpty className="flex justify-between items-center p-2 text-sm">
-                                No companies available.
-                                <Button
-                                  className="size-5"
-                                  variant="ghost"
-                                  onClick={() => onOpen("createCompany")}
-                                >
-                                  <PlusCircle className="size-4" />
-                                </Button>
-                              </CommandEmpty>
-                            ) : (
-                              <>
-                                <CommandEmpty className="flex justify-between items-center p-2 text-sm">
-                                  No companies available.
-                                  <Button
-                                    className="size-5"
-                                    variant="ghost"
-                                    onClick={() => onOpen("createCompany")}
-                                  >
-                                    <PlusCircle className="size-4" />
-                                  </Button>
-                                </CommandEmpty>
-                                {allCompanies.map((company) => (
-                                  <CommandItem
-                                    key={company.id}
-                                    onSelect={() => selectCompany(company.id)}
-                                    className={cn(
-                                      "cursor-pointer",
-                                      selectedCompany === company.id &&
-                                        "bg-muted",
-                                    )}
-                                  >
-                                    {company.name}
-                                    {selectedCompany === company.id && (
-                                      <Check className="ml-auto h-4 w-4 text-primary" />
-                                    )}
-                                  </CommandItem>
-                                ))}
-                              </>
-                            )}
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                    <SelectorDropdown
+                      options={allCompanies}
+                      isLoading={loadingCompanies}
+                      error={companiesError}
+                      selectedValues={selectedCompany}
+                      isMultiSelect={false}
+                      placeholder="Select a company"
+                      searchPlaceholder="Search companies..."
+                      emptyMessage="No companies available."
+                      getDisplayText={(selectedValues, options) => {
+                        if (!selectedValues) return "Select a company";
+                        return (
+                          options?.find(
+                            (company) => company.id === selectedValues
+                          )?.name || "Select a company"
+                        );
+                      }}
+                      onSelect={(id) => setId("companyId", id)}
+                      onClear={() => clearId("companyId")}
+                      onCreateNew={() => onOpen("createCompany")}
+                      disabled={isLoading}
+                    />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Role Selector - Single Selection */}
+              <FormField
+                control={form.control}
+                name="roleId"
+                render={() => (
+                  <FormItem>
+                    <FormLabel className="sr-only">Role</FormLabel>
+                    <SelectorDropdown
+                      options={allRoles}
+                      isLoading={loadingRoles}
+                      error={rolesError}
+                      selectedValues={selectedRole}
+                      isMultiSelect={false}
+                      placeholder="Select a role"
+                      searchPlaceholder="Search roles..."
+                      emptyMessage="No roles available."
+                      getDisplayText={(selectedValues, options) => {
+                        if (!selectedValues) return "Select a role";
+                        return (
+                          options?.find((role) => role.id === selectedValues)
+                            ?.name || "Select a role"
+                        );
+                      }}
+                      onSelect={(id) => setId("roleId", id)}
+                      onClear={() => clearId("roleId")}
+                      onCreateNew={() => onOpen("createRole")}
+                      disabled={isLoading}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -426,96 +326,41 @@ export const PostQuestionModal = () => {
                 render={() => (
                   <FormItem>
                     <FormLabel className="sr-only">Group</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full justify-between text-left"
-                          disabled={isLoading || loadingGroups}
-                        >
-                          <span>
-                            {loadingGroups
-                              ? "Loading groups..."
-                              : selectedGroupName || "Select a group"}
-                          </span>
-                          {selectedGroup && (
-                            <X
-                              className="h-4 w-4 text-muted-foreground hover:text-foreground"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                clearGroup();
-                              }}
+                    <SelectorDropdown
+                      options={allGroups}
+                      isLoading={loadingGroups}
+                      error={groupsError}
+                      selectedValues={selectedGroup}
+                      isMultiSelect={false}
+                      placeholder="Select a group"
+                      searchPlaceholder="Search groups..."
+                      emptyMessage="No groups available."
+                      getDisplayText={(selectedValues, options) => {
+                        if (!selectedValues) return "Select a group";
+                        return (
+                          options?.find((group) => group.id === selectedValues)
+                            ?.name || "Select a group"
+                        );
+                      }}
+                      onSelect={(id) => setId("groupId", id)}
+                      onClear={() => clearId("groupId")}
+                      onCreateNew={() => onOpen("createGroup")}
+                      renderOption={(group, isSelected) => (
+                        <>
+                          <div className="px-4 flex items-center gap-2">
+                            <UserAvatar
+                              src={group.imageUrl!}
+                              className="size-4 md:size-4"
                             />
+                            {group.name}
+                          </div>
+                          {isSelected && (
+                            <Check className="ml-auto h-4 w-4 text-primary" />
                           )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="p-0">
-                        <Command>
-                          <CommandInput placeholder="Search groups..." />
-                          <CommandList>
-                            {loadingGroups ? (
-                              <div className="flex items-center justify-center py-6">
-                                <div className="text-sm text-muted-foreground">
-                                  Loading groups...
-                                </div>
-                              </div>
-                            ) : groupsError ? (
-                              <div className="flex items-center justify-center py-6">
-                                <div className="text-sm text-destructive">
-                                  Failed to load groups
-                                </div>
-                              </div>
-                            ) : !allGroups || allGroups.length === 0 ? (
-                              <CommandEmpty className="flex justify-between items-center p-2 text-sm">
-                                No groups available.
-                                <Button
-                                  className="size-5"
-                                  variant="ghost"
-                                  onClick={() => onOpen("createGroup")}
-                                >
-                                  <PlusCircle className="size-4" />
-                                </Button>
-                              </CommandEmpty>
-                            ) : (
-                              <>
-                                <CommandEmpty className="flex justify-between items-center p-2 text-sm">
-                                  No groups available.
-                                  <Button
-                                    className="size-5"
-                                    variant="ghost"
-                                    onClick={() => onOpen("createGroup")}
-                                  >
-                                    <PlusCircle className="size-4" />
-                                  </Button>
-                                </CommandEmpty>
-                                {allGroups.map((group) => (
-                                  <CommandItem
-                                    key={group.id}
-                                    onSelect={() => selectGroup(group.id)}
-                                    className={cn(
-                                      "cursor-pointer",
-                                      selectedGroup === group.id && "bg-muted",
-                                    )}
-                                  >
-                                    <div className="px-4 flex items-center gap-2">
-                                      <UserAvatar
-                                        src={group.imageUrl!}
-                                        className="size-4 md:size-4"
-                                      />
-                                      {group.name}
-                                    </div>
-                                    {selectedGroup === group.id && (
-                                      <Check className="ml-auto h-4 w-4 text-primary" />
-                                    )}
-                                  </CommandItem>
-                                ))}
-                              </>
-                            )}
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                        </>
+                      )}
+                      disabled={isLoading}
+                    />
                     <FormMessage />
                   </FormItem>
                 )}

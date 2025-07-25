@@ -24,10 +24,8 @@ export const GroupsSelect = () => {
   }
   return (
     <CollapsibleSelect
-      // @ts-expect-error
-      data={data}
+      data={{ type: "groups", data }}
       queryKey="groups"
-      // @ts-expect-error
       onToggle={toggleGroup}
       icon={<Users className="size-4" />}
     />

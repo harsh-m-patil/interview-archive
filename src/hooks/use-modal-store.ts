@@ -7,7 +7,8 @@ export type ModalType =
   | "createTag"
   | "answerQuestion"
   | "createGroup"
-  | "joinGroup";
+  | "joinGroup"
+  | "createRole";
 
 interface ModalData {
   question?: Question;

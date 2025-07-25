@@ -10,7 +10,7 @@ export async function POST(request: Request) {
       return NextResponse.json("Login Please", { status: 401 });
     }
 
-    const { title, link, content, tags, companyId, groupId } =
+    const { title, link, content, tags, companyId, groupId, roleId } =
       await request.json();
 
     const createdQuestion = await db.question.create({
@@ -20,6 +20,7 @@ export async function POST(request: Request) {
         link,
         groupId,
         createdById: user.id,
+        roleId,
         tags: tags?.length
           ? {
               connect: tags.map((tagId: string) => ({ id: tagId })),
@@ -48,11 +49,11 @@ export async function GET(request: Request) {
       searchParams.get("companies")?.split(",").filter(Boolean) || [];
     const groupIds =
       searchParams.get("groups")?.split(",").filter(Boolean) || [];
+    const roleIds = searchParams.get("roles")?.split(",").filter(Boolean) || [];
 
     const user = await currentUser();
     const whereClause: Record<string, unknown> = {};
 
-    // Handle tag filtering
     if (tagIds.length > 0) {
       whereClause.tags = {
         some: {
@@ -63,7 +64,14 @@ export async function GET(request: Request) {
       };
     }
 
-    // Handle company filtering
+    if (roleIds.length > 0) {
+      whereClause.role = {
+        id: {
+          in: roleIds,
+        },
+      };
+    }
+
     if (companyIds.length > 0) {
       whereClause.Company = {
         id: {
@@ -72,12 +80,9 @@ export async function GET(request: Request) {
       };
     }
 
-    // Handle group filtering with proper membership check
     if (!user) {
-      // If no user, only show public questions (no group)
       whereClause.groupId = null;
     } else if (groupIds.length > 0) {
-      // If specific groups requested, check user is member of those groups
       whereClause.AND = [
         {
           groupId: {
@@ -95,9 +100,8 @@ export async function GET(request: Request) {
         },
       ];
     } else {
-      // If no specific groups requested, show public questions + user's group questions
       whereClause.OR = [
-        { groupId: null }, // Public questions
+        { groupId: null },
         {
           group: {
             members: {
@@ -106,7 +110,7 @@ export async function GET(request: Request) {
               },
             },
           },
-        }, // Questions from user's groups
+        },
       ];
     }
 

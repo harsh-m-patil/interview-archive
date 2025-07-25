@@ -1,5 +1,6 @@
 import { UserAvatar } from "@/components/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -10,7 +11,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { QuestionsType } from "@/types";
-import { redirect } from "next/navigation";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export const SkeletonCard = () => {
   return (
@@ -44,14 +46,8 @@ export const SkeletonCard = () => {
 };
 
 export const QuestionsCard = ({ question }: { question: QuestionsType }) => {
-  const handleClick = () => {
-    redirect(`/questions/${question.id}`);
-  };
   return (
-    <Card
-      onClick={handleClick}
-      className="w-full h-full flex flex-col transition-all hover:shadow-md hover:scale-[1.02] group"
-    >
+    <Card className="w-full h-full flex flex-col transition-all hover:shadow-md hover:scale-[1.02] group">
       <CardHeader className="pb-3">
         <CardTitle className="flex justify-between text-lg sm:text-xl leading-tight line-clamp-2 group-hover:text-primary transition-colors">
           <p>{question.title}</p>
@@ -64,11 +60,18 @@ export const QuestionsCard = ({ question }: { question: QuestionsType }) => {
         </p>
       </CardContent>
       <CardFooter className="flex flex-col gap-3 pt-3 mt-auto">
-        <div className="flex items-center gap-2 w-full">
-          <UserAvatar src={question.createdBy.image!} />
-          <span className="text-sm font-medium truncate">
-            {question.createdBy.name}
-          </span>
+        <div className="flex justify-between items-center w-full">
+          <div className="flex items-center gap-2 w-full">
+            <UserAvatar src={question.createdBy.image!} />
+            <span className="text-sm font-medium truncate">
+              {question.createdBy.name}
+            </span>
+          </div>
+          <Link href={`/questions/${question.id}`}>
+            <Button variant="secondary">
+              Details <ArrowRight />
+            </Button>
+          </Link>
         </div>
         {question.tags.length > 0 && (
           <div className="flex flex-wrap gap-1.5 w-full">

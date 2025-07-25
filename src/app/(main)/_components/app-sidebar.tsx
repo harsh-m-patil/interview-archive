@@ -33,7 +33,7 @@ const items = [
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar className="scrollbar-hide">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -53,7 +53,7 @@ export function AppSidebar() {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="overflow-hidden">
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -71,7 +71,9 @@ export function AppSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-        <QuestionFilters />
+        <div className="flex-1 overflow-y-auto scrollbar-hide">
+          <QuestionFilters />
+        </div>
       </SidebarContent>
       <SidebarFooter>
         <AppCommands />

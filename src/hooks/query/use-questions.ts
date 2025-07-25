@@ -19,11 +19,13 @@ async function fetchQuestions({
     const tags = filters.Tags.map((tag) => tag.id).join(",");
     const companies = filters.Companies.map((company) => company.id).join(",");
     const groups = filters.Groups.map((group) => group.id).join(",");
+    const roles = filters.Roles.map((role) => role.id).join(",");
 
     const params = new URLSearchParams();
     if (tags) params.set("tags", tags);
     if (companies) params.set("companies", companies);
     if (groups) params.set("groups", groups);
+    if (roles) params.set("roles", roles);
 
     const url = `/api/questions${params.toString() ? `?${params.toString()}` : ""}`;
     const response = await fetch(url);

@@ -11,26 +11,45 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Group, Company, Tag, Role } from "@/generated/prisma";
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import { ReactNode } from "react";
 
-interface Props<T> {
-  data: T[];
-  onToggle: (item: T) => void;
+type DataMap = {
+  tag: Tag;
+  company: Company;
+  group: Group;
+  role: Role;
+};
+
+type DataType = keyof DataMap;
+
+type Data<T extends DataType = DataType> = {
+  type: T;
+  data: DataMap[T][];
+};
+
+interface Props<T extends DataType = DataType> {
+  data: Data<T>;
+  onToggle: (item: DataMap[T]) => void;
   queryKey: string;
   icon?: ReactNode;
 }
-export function CollapsibleSelect<
-  T extends { id: string; name: string; imageUrl?: string },
->({ data, onToggle, queryKey, icon }: Props<T>) {
+
+export function CollapsibleSelect<T extends DataType>({
+  data,
+  onToggle,
+  queryKey,
+  icon,
+}: Props<T>) {
   const [selectedItemNames, setSelectedItemNames] = useQueryState(
     queryKey,
     parseAsArrayOf(parseAsString).withDefault([]),
   );
 
-  const onToggleItem = (item: T) => {
+  const onToggleItem = (item: DataMap[T]) => {
     onToggle(item);
 
     setSelectedItemNames((prev) => {
@@ -44,7 +63,7 @@ export function CollapsibleSelect<
 
   return (
     <>
-      <Collapsible defaultOpen className="group/collapsible">
+      <Collapsible className="group/collapsible">
         <SidebarGroup>
           <SidebarGroupLabel
             asChild
@@ -61,7 +80,7 @@ export function CollapsibleSelect<
           <CollapsibleContent>
             <SidebarGroupContent>
               <SidebarMenu className="p-2">
-                {data.map((item) => {
+                {data.data.map((item) => {
                   const isSelected = selectedItemNames.includes(item.name);
                   return (
                     <SidebarMenuItem
@@ -73,12 +92,12 @@ export function CollapsibleSelect<
                       onClick={() => onToggleItem(item)}
                     >
                       <div className="flex items-center gap-2">
-                        {item.imageUrl && (
+                        {data.type === "group" && "imageUrl" in item ? (
                           <UserAvatar
                             src={item.imageUrl!}
-                            className="size-6 md:size-6"
+                            className="size-5 md:size-5"
                           />
-                        )}
+                        ) : null}
                         {item.name}
                       </div>
                     </SidebarMenuItem>

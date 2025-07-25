@@ -14,6 +14,7 @@ interface QuestionFiltersStore {
   toggleTag: (tag: Tag) => void;
   toggleCompany: (company: Company) => void;
   toggleGroup: (group: Group) => void;
+  toggleRole: (role: Role) => void;
   resetFilters: () => void;
 }
 
@@ -74,6 +75,24 @@ export const useQuestionFilter = create<QuestionFiltersStore>((set, get) => ({
       set(
         produce((state: QuestionFiltersStore) => {
           state.filters.Groups.push(group);
+        }),
+      );
+    }
+  },
+  toggleRole: (role) => {
+    const exists = get().filters.Roles.some((r) => r.id === role.id);
+    if (exists) {
+      set(
+        produce((state: QuestionFiltersStore) => {
+          state.filters.Roles = state.filters.Roles.filter(
+            (r) => r.id !== role.id,
+          );
+        }),
+      );
+    } else {
+      set(
+        produce((state: QuestionFiltersStore) => {
+          state.filters.Roles.push(role);
         }),
       );
     }
