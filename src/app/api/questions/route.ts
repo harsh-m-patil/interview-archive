@@ -80,7 +80,7 @@ export async function GET(request: Request) {
     }
 
     if (!user) {
-      whereClause.group = {};
+      whereClause.groupId = null;
     } else if (groups.length > 0) {
       whereClause.AND = [
         {

@@ -33,14 +33,12 @@ type Data<T extends DataType = DataType> = {
 
 interface Props<T extends DataType = DataType> {
   data: Data<T>;
-  onToggle: (item: DataMap[T]) => void;
   queryKey: string;
   icon?: ReactNode;
 }
 
 export function CollapsibleSelect<T extends DataType>({
   data,
-  onToggle,
   queryKey,
   icon,
 }: Props<T>) {
@@ -50,8 +48,6 @@ export function CollapsibleSelect<T extends DataType>({
   );
 
   const onToggleItem = (item: DataMap[T]) => {
-    onToggle(item);
-
     setSelectedItemNames((prev) => {
       if (prev.includes(item.name)) {
         return prev.filter((name) => name !== item.name);
