@@ -1,31 +1,39 @@
 import { QuestionsType } from "@/types";
-import { QuestionFilterData } from "../use-question-filters-store";
 import { useQuery } from "@tanstack/react-query";
 
-export const useQuestions = (filters: QuestionFilterData) => {
+interface FetchQuestionsParams {
+  tags: string[];
+  companies: string[];
+  roles: string[];
+  groups: string[];
+}
+
+export const useQuestions = (filters: FetchQuestionsParams) => {
   return useQuery({
     queryKey: ["questions", filters],
-    queryFn: () => fetchQuestions({ filters }),
+    queryFn: () => fetchQuestions(filters),
     staleTime: 1000 * 60 * 1,
   });
 };
 
 async function fetchQuestions({
-  filters,
-}: {
-  filters: QuestionFilterData;
-}): Promise<QuestionsType[]> {
+  tags = [],
+  companies = [],
+  roles = [],
+  groups = [],
+}: FetchQuestionsParams): Promise<QuestionsType[]> {
   try {
-    const tags = filters.Tags.map((tag) => tag.id).join(",");
-    const companies = filters.Companies.map((company) => company.id).join(",");
-    const groups = filters.Groups.map((group) => group.id).join(",");
-    const roles = filters.Roles.map((role) => role.id).join(",");
-
     const params = new URLSearchParams();
-    if (tags) params.set("tags", tags);
-    if (companies) params.set("companies", companies);
-    if (groups) params.set("groups", groups);
-    if (roles) params.set("roles", roles);
+
+    const tagQuery = tags.join(",");
+    const companiesQuery = companies.join(",");
+    const rolesQuery = roles.join(",");
+    const groupsQuery = groups.join(",");
+
+    if (tagQuery) params.set("tags", tagQuery);
+    if (companiesQuery) params.set("companies", companiesQuery);
+    if (rolesQuery) params.set("roles", rolesQuery);
+    if (groupsQuery) params.set("groups", groupsQuery);
 
     const url = `/api/questions${params.toString() ? `?${params.toString()}` : ""}`;
     const response = await fetch(url);

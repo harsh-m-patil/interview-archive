@@ -2,14 +2,7 @@
 import { useQuestionFilter } from "@/hooks/use-question-filters-store";
 import { useGroups } from "@/hooks/query/use-groups";
 import { CollapsibleSelect } from "./collapsible-selector";
-import {
-  Building,
-  ChevronRight,
-  Loader,
-  Tags,
-  Users,
-  UserSearch,
-} from "lucide-react";
+import { Building, ChevronRight, Tags, Users, UserSearch } from "lucide-react";
 import { useCompanies } from "@/hooks/query/use-companies";
 import { useTags } from "@/hooks/query/use-tags";
 import { useRoles } from "@/hooks/query/use-roles";
