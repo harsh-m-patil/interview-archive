@@ -1,5 +1,4 @@
 "use client";
-import { useQuestionFilter } from "@/hooks/use-question-filters-store";
 import { useGroups } from "@/hooks/query/use-groups";
 import { CollapsibleSelect } from "./collapsible-selector";
 import { Building, ChevronRight, Tags, Users, UserSearch } from "lucide-react";
@@ -11,8 +10,6 @@ import { SidebarGroup, SidebarGroupLabel } from "@/components/ui/sidebar";
 
 const GroupsSelect = () => {
   const { data, isLoading, error, isError } = useGroups();
-
-  const { toggleGroup } = useQuestionFilter();
 
   if (isLoading) {
     return (
@@ -46,7 +43,6 @@ const GroupsSelect = () => {
     <CollapsibleSelect
       data={{ type: "group", data }}
       queryKey="groups"
-      onToggle={toggleGroup}
       icon={<Users className="size-4" />}
     />
   );
@@ -54,7 +50,6 @@ const GroupsSelect = () => {
 
 const CompaniesSelect = () => {
   const { data, isLoading, error, isError } = useCompanies();
-  const { toggleCompany } = useQuestionFilter();
   if (isLoading) {
     return (
       <Collapsible className="group/collapsible">
@@ -89,7 +84,6 @@ const CompaniesSelect = () => {
     <CollapsibleSelect
       data={{ type: "company", data: data }}
       queryKey="companies"
-      onToggle={toggleCompany}
       icon={<Building className="size-4" />}
     />
   );
@@ -97,7 +91,6 @@ const CompaniesSelect = () => {
 
 const TagsSelect = () => {
   const { data, isLoading, error, isError } = useTags();
-  const { toggleTag } = useQuestionFilter();
   if (isLoading) {
     return (
       <Collapsible className="group/collapsible">
@@ -130,7 +123,6 @@ const TagsSelect = () => {
     <CollapsibleSelect
       data={{ type: "tag", data }}
       queryKey="tags"
-      onToggle={toggleTag}
       icon={<Tags className="size-4" />}
     />
   );
@@ -138,7 +130,6 @@ const TagsSelect = () => {
 
 const RolesSelect = () => {
   const { data, isLoading, error, isError } = useRoles();
-  const { toggleRole } = useQuestionFilter();
 
   if (isLoading) {
     return (
@@ -175,7 +166,6 @@ const RolesSelect = () => {
     <CollapsibleSelect
       data={{ type: "role", data }}
       queryKey="roles"
-      onToggle={toggleRole}
       icon={<UserSearch className="size-4" />}
     />
   );
