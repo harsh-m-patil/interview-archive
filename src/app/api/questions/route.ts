@@ -44,49 +44,50 @@ export async function POST(request: Request) {
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const tagIds = searchParams.get("tags")?.split(",").filter(Boolean) || [];
-    const companyIds =
+    const tags = searchParams.get("tags")?.split(",").filter(Boolean) || [];
+    const companies =
       searchParams.get("companies")?.split(",").filter(Boolean) || [];
-    const groupIds =
-      searchParams.get("groups")?.split(",").filter(Boolean) || [];
-    const roleIds = searchParams.get("roles")?.split(",").filter(Boolean) || [];
+    const groups = searchParams.get("groups")?.split(",").filter(Boolean) || [];
+    const roles = searchParams.get("roles")?.split(",").filter(Boolean) || [];
 
     const user = await currentUser();
     const whereClause: Record<string, unknown> = {};
 
-    if (tagIds.length > 0) {
+    if (tags.length > 0) {
       whereClause.tags = {
         some: {
-          id: {
-            in: tagIds,
+          name: {
+            in: tags,
           },
         },
       };
     }
 
-    if (roleIds.length > 0) {
+    if (roles.length > 0) {
       whereClause.role = {
-        id: {
-          in: roleIds,
+        name: {
+          in: roles,
         },
       };
     }
 
-    if (companyIds.length > 0) {
+    if (companies.length > 0) {
       whereClause.Company = {
-        id: {
-          in: companyIds,
+        name: {
+          in: companies,
         },
       };
     }
 
     if (!user) {
-      whereClause.groupId = null;
-    } else if (groupIds.length > 0) {
+      whereClause.group = {};
+    } else if (groups.length > 0) {
       whereClause.AND = [
         {
-          groupId: {
-            in: groupIds,
+          group: {
+            name: {
+              in: groups,
+            },
           },
         },
         {

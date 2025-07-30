@@ -1,10 +1,31 @@
-import { useQuestionFilter } from "@/hooks/use-question-filters-store";
 import { QuestionsCard, SkeletonCard } from "./questions-card";
 import { useQuestions } from "@/hooks/query/use-questions";
+import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 
 export const Questions = () => {
-  const { filters } = useQuestionFilter();
-  const { isLoading, data: questions } = useQuestions(filters);
+  const [tags] = useQueryState(
+    "tags",
+    parseAsArrayOf(parseAsString).withDefault([]),
+  );
+  const [companies] = useQueryState(
+    "companies",
+    parseAsArrayOf(parseAsString).withDefault([]),
+  );
+  const [roles] = useQueryState(
+    "roles",
+    parseAsArrayOf(parseAsString).withDefault([]),
+  );
+  const [groups] = useQueryState(
+    "groups",
+    parseAsArrayOf(parseAsString).withDefault([]),
+  );
+
+  const { isLoading, data: questions } = useQuestions({
+    tags,
+    companies,
+    roles,
+    groups,
+  });
 
   if (isLoading) {
     return (
@@ -38,9 +59,8 @@ export const Questions = () => {
           No questions found
         </h3>
         <p className="text-sm text-muted-foreground max-w-sm">
-          {filters.Tags.length > 0
-            ? "Try adjusting your filters or be the first to post a question with these tags."
-            : "Be the first to post a question to the community."}
+          It seems there are no questions matching your filters. Try adjusting
+          your search criteria or check back later.
         </p>
       </div>
     );
