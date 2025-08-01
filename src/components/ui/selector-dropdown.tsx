@@ -39,7 +39,7 @@ interface SelectorDropdownProps {
   emptyMessage: string;
   getDisplayText: (
     selectedValues: string | string[] | undefined,
-    options: SelectorOption[] | null | undefined
+    options: SelectorOption[] | null | undefined,
   ) => string;
 
   // Actions
@@ -79,6 +79,7 @@ export const SelectorDropdown = ({
     <>
       {option.imageUrl && (
         <div className="flex items-center gap-2">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={option.imageUrl} alt="" className="size-4 rounded" />
           {option.name}
         </div>
@@ -109,7 +110,7 @@ export const SelectorDropdown = ({
           className={cn(
             "w-full justify-between text-left",
             isMultiSelect && "justify-start",
-            className
+            className,
           )}
           disabled={disabled || isLoading}
         >
