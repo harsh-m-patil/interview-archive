@@ -27,7 +27,7 @@ interface AIEvaluationProps {
       name: string;
     };
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    aiEvaluation: Record<string, any> | null;
+    aiEvaluation: any;
   };
 }
 
