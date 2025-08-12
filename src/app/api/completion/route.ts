@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { SYSTEM_PROMPT } from "@/lib/prompt";
+import { SYSTEM_PROMPT } from "@/lib/prompts";
 import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
 

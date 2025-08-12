@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { SYSTEM_PROMPT_INTERVIEWER } from "@/lib/prompt";
+import { SYSTEM_PROMPT_INTERVIEWER } from "@/lib/prompts";
 import { aiEvaluationSchema } from "@/types";
 import { google } from "@ai-sdk/google";
 import { streamObject } from "ai";
