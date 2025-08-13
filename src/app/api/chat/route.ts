@@ -28,6 +28,7 @@ export async function POST(req: Request) {
       interviewerMode: interviewMode,
     }),
     tools: {
+      google_search: google.tools.googleSearch({}),
       getInterviewQuestions: tool({
         description: "Get interview questions from the database",
         inputSchema: z.object({

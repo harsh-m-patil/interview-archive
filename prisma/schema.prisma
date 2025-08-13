@@ -169,3 +169,7 @@ model Member {
   @@index([userId])
   @@index([groupId])
 }
+
+model Message {
+  id String @id @default(cuid())
+}

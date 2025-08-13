@@ -34,13 +34,6 @@ import {
   ReasoningContent,
   ReasoningTrigger,
 } from "@/components/ai-elements/reasoning";
-import {
-  Tool,
-  ToolHeader,
-  ToolInput,
-  ToolOutput,
-  ToolContent,
-} from "@/components/ai-elements/tool";
 import { Loader } from "@/components/ai-elements/loader";
 
 const models = [
