@@ -28,7 +28,7 @@ A comprehensive platform for storing, organizing, and sharing interview question
 - **Framework**: Next.js 15 with App Router
 - **Authentication**: Better Auth
 - **Database**: PostgreSQL with Prisma ORM
-- **UI**: shadcn/ui components with Tailwind CSS
+- **UI**: shadcn/ui components with Tailwind CSS, [MvpBlocks](https://github.com/subhadeeproy3902/mvpblocks)
 - **State Management**: Zustand & TanStack Query
 - **Type Safety**: TypeScript with Zod validation
 - **AI Integration**: AI SDK for intelligent answer generation
