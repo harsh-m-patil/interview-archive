@@ -39,7 +39,7 @@ const navItems: NavItem[] = [
         href: "/dashboard",
         description: "Manage your data",
       },
-      { name: "Interview Agent", href: "/interview", description: "Interview Agent" },
+      { name: "Interview Agent", href: "/interview", description: "Simulate interviews and receive feedback" },
     ],
   },
   { name: "Pricing", href: "/pricing" },
