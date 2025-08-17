@@ -70,7 +70,7 @@ const ChatBotDemo = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 relative size-full h-screen">
+    <div className="p-12 relative size-full h-screen">
       <div className="flex flex-col h-full">
         <Conversation className="h-full">
           <ConversationContent>
@@ -78,26 +78,24 @@ const ChatBotDemo = () => {
               <div key={message.id}>
                 {message.role === "assistant" && (
                   <Sources>
+                    <SourcesTrigger
+                      count={
+                        message.parts.filter(
+                          (part) => part.type === "source-url",
+                        ).length
+                      }
+                    />
                     {message.parts.map((part, i) => {
                       switch (part.type) {
                         case "source-url":
                           return (
-                            <>
-                              <SourcesTrigger
-                                count={
-                                  message.parts.filter(
-                                    (part) => part.type === "source-url",
-                                  ).length
-                                }
+                            <SourcesContent key={`${message.id}-${i}`}>
+                              <Source
+                                key={`${message.id}-${i}`}
+                                href={part.url}
+                                title={part.url.slice(0, 40)}
                               />
-                              <SourcesContent key={`${message.id}-${i}`}>
-                                <Source
-                                  key={`${message.id}-${i}`}
-                                  href={part.url}
-                                  title={part.url}
-                                />
-                              </SourcesContent>
-                            </>
+                            </SourcesContent>
                           );
                       }
                     })}
@@ -137,7 +135,10 @@ const ChatBotDemo = () => {
           <ConversationScrollButton />
         </Conversation>
 
-        <PromptInput onSubmit={handleSubmit} className="mt-4 p-2">
+        <PromptInput
+          onSubmit={handleSubmit}
+          className="mt-4 p-2 mx-auto max-w-4xl"
+        >
           <PromptInputTextarea
             onChange={(e) => setInput(e.target.value)}
             value={input}

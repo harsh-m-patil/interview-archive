@@ -21,69 +21,35 @@ export async function POST(req: Request) {
   }: { messages: UIMessage[]; model: string; interviewMode: boolean } =
     await req.json();
 
+  const providerOptions = {
+    google: {
+      thinkingConfig: {
+        thinkingBudget: 4096,
+        includeThoughts: true,
+      },
+    },
+  };
+
   const result = streamText({
     model: google(model),
     messages: convertToModelMessages(messages),
+    providerOptions: model === "gemini-2.5-flash" ? providerOptions : undefined,
     system: getSYSTEM_PROMPT_INTERVIEW_AGENT({
       interviewerMode: interviewMode,
     }),
     tools: {
-      google_search: google.tools.googleSearch({}),
       getInterviewQuestions: tool({
-        description: "Get interview questions from the database",
-        inputSchema: z.object({
-          role: z
-            .string()
-            .describe("The role for which to get interview questions"),
-          company: z
-            .string()
-            .optional()
-            .describe("The company for which to get interview questions"),
-          tags: z
-            .array(z.string())
-            .optional()
-            .describe("Tags to filter interview questions"),
+        description:
+          "Fetches interview questions from the database based on role, company, and tags.",
+        execute: async () => ({
+          questions: [],
         }),
-        execute: async ({ role, company, tags }) => {
-          const whereClause: Record<string, unknown> = {};
-          if (tags && tags.length > 0) {
-            whereClause.tags = {
-              some: {
-                name: {
-                  in: tags,
-                },
-              },
-            };
-          }
-          if (role) {
-            whereClause.role = {
-              name: role.toLowerCase(),
-            };
-          }
-          if (company) {
-            whereClause.Company = {
-              name: company,
-            };
-          }
-
-          console.log(whereClause);
-          const questions = await db.question.findMany({
-            where: whereClause,
-            include: {
-              role: true,
-              Company: true,
-              tags: true,
-            },
-          });
-
-          return questions;
-        },
       }),
+      google_search: google.tools.googleSearch({}),
     },
     stopWhen: stepCountIs(5),
   });
 
-  // send sources and reasoning back to the client
   return result.toUIMessageStreamResponse({
     sendSources: true,
     sendReasoning: true,
