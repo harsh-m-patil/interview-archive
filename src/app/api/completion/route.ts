@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { SYSTEM_PROMPT } from "@/lib/prompts";
+import { ANSWER_SYSTEM_PROMPT } from "@/lib/prompts";
 import { google } from "@ai-sdk/google";
 import { streamText } from "ai";
 
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model: google("gemini-2.0-flash"),
-    system: SYSTEM_PROMPT,
+    system: ANSWER_SYSTEM_PROMPT,
     prompt,
     onFinish: async ({ text }) => {
       await db.question.update({
