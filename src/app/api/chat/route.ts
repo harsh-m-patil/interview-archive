@@ -7,8 +7,7 @@ import {
   convertToModelMessages,
 } from "ai";
 import { getSYSTEM_PROMPT_INTERVIEW_AGENT } from "@/lib/prompts";
-import z from "zod";
-import { db } from "@/lib/db";
+import { getCompanies, getInterviewQuestions, getTags } from "@/lib/tools";
 
 // Allow streaming responses up to 30 seconds
 export const maxDuration = 30;
@@ -38,14 +37,9 @@ export async function POST(req: Request) {
       interviewerMode: interviewMode,
     }),
     tools: {
-      getInterviewQuestions: tool({
-        description:
-          "Fetches interview questions from the database based on role, company, and tags.",
-        execute: async () => ({
-          questions: [],
-        }),
-      }),
-      google_search: google.tools.googleSearch({}),
+      getInterviewQuestions,
+      getCompanies,
+      getTags,
     },
     stopWhen: stepCountIs(5),
   });
