@@ -17,6 +17,7 @@
 		"@ai-sdk/react": "2.0.0-beta.25",
 		"@hookform/resolvers": "^5.2.1",
 		"@icons-pack/react-simple-icons": "^13.7.0",
+		"@openrouter/ai-sdk-provider": "^1.1.2",
 		"@prisma/client": "^6.13.0",
 		"@radix-ui/react-avatar": "^1.1.10",
 		"@radix-ui/react-checkbox": "^1.3.2",

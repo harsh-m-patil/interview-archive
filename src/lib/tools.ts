@@ -16,6 +16,11 @@ export const getInterviewQuestions = tool({
 
     const whereClause: Record<string, unknown> = {};
 
+    // capitalize first letter of company
+    company = company
+      ? company.charAt(0).toUpperCase() + company.slice(1)
+      : company;
+
     if (company) {
       whereClause.Company = {
         name: company,

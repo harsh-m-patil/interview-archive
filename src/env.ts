@@ -15,6 +15,7 @@ export const env = createEnv({
     GOOGLE_CLIENT_SECRET: z.string(),
     UPLOADTHING_TOKEN: z.string(),
     GOOGLE_GENERATIVE_AI_API_KEY: z.string(),
+    OPENROUTER_API_KEY: z.string(),
   },
 
   client: {},
