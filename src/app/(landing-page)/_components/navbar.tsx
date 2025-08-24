@@ -173,7 +173,7 @@ export function Navbar() {
           <div className="hidden items-center space-x-4 lg:flex">
             <ModeToggle />
             <Link
-              href="/login"
+              href="/sign-in"
               className="text-foreground font-medium transition-colors duration-200 hover:text-primary"
             >
               Sign In
