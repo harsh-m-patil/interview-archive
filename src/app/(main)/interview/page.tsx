@@ -45,6 +45,12 @@ const models = [
     name: "Gemini 2.5 Flash",
     value: "gemini-2.5-flash",
   },
+  { name: "ZAI GLM 4.5 Air", value: "z-ai/glm-4.5-air:free" },
+  { name: "MoonShot kimi-k2", value: "moonshotai/kimi-k2:free" },
+  {
+    name: "Mistral 7B Instruct",
+    value: "mistralai/mistral-7b-instruct:free",
+  },
 ];
 
 const ChatBotDemo = () => {
