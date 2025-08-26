@@ -17,17 +17,19 @@ import Link from "next/link";
 import { ModeToggle } from "@/components/theme-toggle";
 import { AppCommands } from "@/components/app-commands";
 import { QuestionFilters } from "./sidebar/selectors";
+import type { Route } from "next";
+import { ReactNode } from "react";
 
-const items = [
+const items: { title: string; url: Route; icon: ReactNode }[] = [
   {
     title: "Home",
     url: "/",
-    icon: Home,
+    icon: <Home />,
   },
   {
     title: "Questions",
     url: "/questions",
-    icon: CircleQuestionMark,
+    icon: <CircleQuestionMark />,
   },
 ];
 
@@ -62,7 +64,7 @@ export function AppSidebar() {
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <Link href={item.url}>
-                      <item.icon />
+                      {item.icon}
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
