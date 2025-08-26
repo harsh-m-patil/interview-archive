@@ -3,6 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "./_components/app-sidebar";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Suspense } from "react";
+import { TRPCReactProvider } from "@/trpc/client";
 
 export default function MainLayOut({
   children,
@@ -12,14 +13,16 @@ export default function MainLayOut({
   return (
     <>
       <NuqsAdapter>
-        <SidebarProvider>
-          <AppSidebar />
-          <ModalProvider />
-          <SidebarTrigger />
-          <Suspense>
-            <div className="w-full">{children}</div>
-          </Suspense>
-        </SidebarProvider>
+        <TRPCReactProvider>
+          <SidebarProvider>
+            <AppSidebar />
+            <ModalProvider />
+            <SidebarTrigger />
+            <Suspense>
+              <div className="w-full">{children}</div>
+            </Suspense>
+          </SidebarProvider>
+        </TRPCReactProvider>
       </NuqsAdapter>
     </>
   );
