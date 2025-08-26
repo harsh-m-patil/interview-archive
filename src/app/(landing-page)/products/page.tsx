@@ -1,9 +1,23 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import type { Route } from "next";
-import { Search, Sparkles, Layers, MessageSquare, ShieldCheck } from "lucide-react";
+import {
+  Search,
+  Sparkles,
+  Layers,
+  MessageSquare,
+  ShieldCheck,
+} from "lucide-react";
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +31,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 // Product model
- type Product = {
+type Product = {
   id: string;
   name: string;
   description: string;
@@ -32,8 +46,7 @@ const products: Product[] = [
   {
     id: "questions",
     name: "Questions",
-    description:
-      "Crowd-sourced question bank with tags, roles, and companies.",
+    description: "Crowd-sourced question bank with tags, roles, and companies.",
     tags: ["Search", "Tags", "Companies", "Roles"],
     href: "/questions",
     cta: "Explore questions",
@@ -84,28 +97,37 @@ export default function ProductsPage() {
       p.name.toLowerCase().includes(q) ||
       p.description.toLowerCase().includes(q) ||
       p.tags.some((t) => t.toLowerCase().includes(q));
-    const inCategory = category === "all" || p.category.toLowerCase() === category;
+    const inCategory =
+      category === "all" || p.category.toLowerCase() === category;
     return inSearch && inCategory;
   });
 
   return (
-    <div className="px-4 md:px-8 lg:px-12">
+    <div className="px-4 md:px-8 lg:px-12 mt-12">
       {/* Hero */}
       <section className="mx-auto max-w-5xl py-10 md:py-16">
         <div className="text-center space-y-4">
-          <Badge variant="secondary" className="rounded-full px-3 py-1">What you can build with Interview Archive</Badge>
+          <Badge variant="secondary" className="rounded-full px-3 py-1">
+            What you can build with Interview Archive
+          </Badge>
           <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">
             Ship interviews faster with AI and a rich question bank
           </h1>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Powerful building blocks for practicing and collaborating: AI interview simulations, curated questions, real-time collaboration, and trustworthy AI answers.
+            Powerful building blocks for practicing and collaborating: AI
+            interview simulations, curated questions, real-time collaboration,
+            and trustworthy AI answers.
           </p>
           <div className="flex items-center justify-center gap-3 pt-2">
             <Link href="/interview">
-              <Button size="lg" className="rounded-full">Try Interview Agent</Button>
+              <Button size="lg" className="rounded-full">
+                Try Interview Agent
+              </Button>
             </Link>
             <Link href="/questions">
-              <Button size="lg" variant="secondary" className="rounded-full">Browse Questions</Button>
+              <Button size="lg" variant="secondary" className="rounded-full">
+                Browse Questions
+              </Button>
             </Link>
           </div>
         </div>
@@ -124,7 +146,10 @@ export default function ProductsPage() {
               />
             </div>
             <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger aria-label="Filter by category" className="h-11 min-w-40">
+              <SelectTrigger
+                aria-label="Filter by category"
+                className="h-11 min-w-40"
+              >
                 <SelectValue placeholder="All categories" />
               </SelectTrigger>
               <SelectContent>
@@ -154,17 +179,33 @@ export default function ProductsPage() {
                       </span>
                       <span>{p.name}</span>
                     </span>
-                    <Badge variant="outline" className="capitalize">{p.category.toLowerCase()}</Badge>
+                    <Badge variant="outline" className="capitalize">
+                      {p.category.toLowerCase()}
+                    </Badge>
                   </CardTitle>
-                  <CardDescription className="pt-1">{p.description}</CardDescription>
+                  <CardDescription className="pt-1">
+                    {p.description}
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex flex-wrap gap-2">
                     {p.tags.map((t) => (
-                      <Badge key={t} variant="secondary" className="rounded-full">{t}</Badge>
+                      <Badge
+                        key={t}
+                        variant="secondary"
+                        className="rounded-full"
+                      >
+                        {t}
+                      </Badge>
                     ))}
                   </div>
-                  <Button size="sm" variant="secondary" className="rounded-full">{p.cta}</Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="rounded-full"
+                  >
+                    {p.cta}
+                  </Button>
                 </CardContent>
               </Card>
             </Link>
@@ -199,7 +240,9 @@ export default function ProductsPage() {
       <section className="mx-auto max-w-5xl pb-16 md:pb-24">
         <div className="grid gap-8 md:grid-cols-2">
           <div className="space-y-5">
-            <h2 className="text-xl font-semibold tracking-tight">Frequently asked</h2>
+            <h2 className="text-xl font-semibold tracking-tight">
+              Frequently asked
+            </h2>
             <div className="space-y-4">
               {[
                 {
@@ -225,11 +268,21 @@ export default function ProductsPage() {
           <div className="rounded-xl border bg-card p-6 md:p-8">
             <div className="space-y-2">
               <h3 className="text-2xl font-semibold">Ready to get started?</h3>
-              <p className="text-muted-foreground">Jump into an AI interview or explore curated questions.</p>
+              <p className="text-muted-foreground">
+                Jump into an AI interview or explore curated questions.
+              </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-3 pt-4">
-              <Link href="/interview"><Button className="rounded-full" size="lg">Start Interview</Button></Link>
-              <Link href="/questions"><Button className="rounded-full" size="lg" variant="secondary">Browse Questions</Button></Link>
+              <Link href="/interview">
+                <Button className="rounded-full" size="lg">
+                  Start Interview
+                </Button>
+              </Link>
+              <Link href="/questions">
+                <Button className="rounded-full" size="lg" variant="secondary">
+                  Browse Questions
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
