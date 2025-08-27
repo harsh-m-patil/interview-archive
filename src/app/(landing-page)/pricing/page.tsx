@@ -10,7 +10,7 @@ import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
   title: "Pricing · Interview Archive",
-  description: "Simple pricing: it’s free right now.",
+  description: "It’s free because we’re allergic to billing right now.",
 };
 
 const features = [
@@ -27,9 +27,9 @@ export default function PricingPage() {
       {/* Hero */}
       <section className="mx-auto max-w-4xl py-10 md:py-16 text-center space-y-4">
         <Badge variant="secondary" className="rounded-full px-3 py-1">Pricing</Badge>
-        <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">It’s free. No payments implemented.</h1>
+        <h1 className="text-3xl md:text-5xl font-semibold tracking-tight">Price: $0. Because paperwork is scary.</h1>
         <p className="text-muted-foreground max-w-2xl mx-auto">
-          You read that right — we haven’t implemented billing yet, so everything is free to use. When we add paid tiers, there'll still be a generous free plan.
+          Yep, it’s free. We haven’t implemented payments because we’re busy building useful stuff and avoiding the great credit-card hydra. When paid tiers arrive, the freebie stays generous. Pinky swear.
         </p>
         <div className="flex items-center justify-center gap-3 pt-2">
           <Link href="/interview"><Button size="lg" className="rounded-full">Start Interview</Button></Link>
@@ -45,11 +45,11 @@ export default function PricingPage() {
           <Card className="md:col-span-2 order-2 md:order-1">
             <CardHeader>
               <CardTitle>Free</CardTitle>
-              <CardDescription>Everything you need to prep today</CardDescription>
+              <CardDescription>Everything you need to prep today. For the low, low price of nada.</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="text-4xl font-semibold">$0</div>
-              <div className="text-muted-foreground mb-4">No credit card required</div>
+              <div className="text-muted-foreground mb-4">No credit card required. We don’t even want it. Keep it. Buy tacos.</div>
               <ul className="space-y-2">
                 {features.map((f) => (
                   <li key={f} className="flex items-center gap-2">
@@ -67,7 +67,7 @@ export default function PricingPage() {
             </CardHeader>
             <CardContent>
               <div className="text-3xl font-semibold">TBD</div>
-              <div className="text-muted-foreground mb-4">We’ll keep the free plan generous</div>
+              <div className="text-muted-foreground mb-4">We’ll keep the free plan generous. Like your favorite buffet, minus the regret.</div>
               <ul className="space-y-2 text-muted-foreground text-sm">
                 <li>Usage boosts</li>
                 <li>Advanced AI capabilities</li>
@@ -85,20 +85,20 @@ export default function PricingPage() {
             <h2 className="text-xl font-semibold tracking-tight">FAQ</h2>
             <div>
               <div className="font-medium">Is it really free?</div>
-              <div className="text-sm text-muted-foreground">Yes. We haven’t implemented payments yet, so enjoy it for free.</div>
+              <div className="text-sm text-muted-foreground">Yes. As in “$0, zip, zilch.” Payments aren’t a thing here... yet.</div>
             </div>
             <div>
               <div className="font-medium">Will you charge later?</div>
-              <div className="text-sm text-muted-foreground">Likely for advanced features. A generous free plan will remain.</div>
+              <div className="text-sm text-muted-foreground">Probably—for fancy stuff. The free tier will stay chunky enough to chew on.</div>
             </div>
             <div>
               <div className="font-medium">Do I need a card?</div>
-              <div className="text-sm text-muted-foreground">No. No billing, no card.</div>
+              <div className="text-sm text-muted-foreground">Nope. No billing, no card, no “oops I forgot to cancel.”</div>
             </div>
           </div>
           <div className="rounded-xl border bg-card p-6">
             <div className="flex items-center gap-2 font-medium"><ShieldCheck className="size-4" /> No hidden fees</div>
-            <div className="text-sm text-muted-foreground">Just practice and collaborate.</div>
+            <div className="text-sm text-muted-foreground">Just practice and collaborate. The only thing hidden is our ability to charge money.</div>
             <div className="flex gap-3 pt-4">
               <Link href="/interview"><Button className="rounded-full">Start Interview</Button></Link>
               <Link href="/questions"><Button className="rounded-full" variant="secondary">Browse Questions</Button></Link>
