@@ -16,6 +16,7 @@ import { formatDate } from "@/lib/date";
 import { AI } from "@/components/ai";
 import { EditQuestionButton } from "../../_components/edit-question-button";
 import { AIEvaluation } from "@/components/ai-evalution";
+import { UrlObject } from "url";
 
 type QuestionPageProps = {
   params: Promise<{
@@ -198,7 +199,7 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
                     <div>
                       {answer.contentLink && (
                         <Link
-                          href={answer.contentLink}
+                          href={answer.contentLink as unknown as UrlObject}
                           className="gap-2 flex items-center underline"
                         >
                           Answer
