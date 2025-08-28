@@ -10,6 +10,7 @@ import {
   MessageSquare,
   ShieldCheck,
 } from "lucide-react";
+import { motion } from "motion/react";
 
 import {
   Card,
@@ -106,7 +107,7 @@ export default function ProductsPage() {
     <div className="px-4 md:px-8 lg:px-12 mt-12">
       {/* Hero */}
       <section className="mx-auto max-w-5xl py-10 md:py-16">
-        <div className="text-center space-y-4">
+        <motion.div className="text-center space-y-4" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.5 }}>
           <Badge variant="secondary" className="rounded-full px-3 py-1">
             What you can build with Interview Archive
           </Badge>
@@ -130,10 +131,10 @@ export default function ProductsPage() {
               </Button>
             </Link>
           </div>
-        </div>
+        </motion.div>
 
         {/* Search + Filters */}
-        <div className="mt-10 md:mt-12">
+        <motion.div className="mt-10 md:mt-12" initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true, amount: 0.2 }}>
           <div className="flex flex-col md:flex-row items-stretch gap-3 md:items-center">
             <div className="relative w-full md:flex-1">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
@@ -160,7 +161,7 @@ export default function ProductsPage() {
               </SelectContent>
             </Select>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       <Separator />
@@ -168,46 +169,49 @@ export default function ProductsPage() {
       {/* Feature grid */}
       <section className="mx-auto max-w-6xl py-10 md:py-14">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p) => (
+          {filtered.map((p, idx) => (
             <Link key={p.id} href={p.href} className="group">
-              <Card className="h-full border-muted/60 transition-all hover:shadow-md hover:border-primary/60">
-                <CardHeader>
-                  <CardTitle className="flex items-center justify-between gap-2">
-                    <span className="flex items-center gap-2">
-                      <span className="rounded-md bg-muted text-muted-foreground p-2">
-                        {p.icon}
+              <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }} transition={{ delay: idx * 0.05 }}>
+                <Card className="h-full border-muted/60 transition-all hover:shadow-md hover:border-primary/60">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between gap-2">
+                      <span className="flex items-center gap-2">
+                        <span className="rounded-md bg-muted text-muted-foreground p-2">
+                          {p.icon}
+                        </span>
+                        <span>{p.name}</span>
                       </span>
-                      <span>{p.name}</span>
-                    </span>
-                    <Badge variant="outline" className="capitalize">
-                      {p.category.toLowerCase()}
-                    </Badge>
-                  </CardTitle>
-                  <CardDescription className="pt-1">
-                    {p.description}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex flex-wrap gap-2">
-                    {p.tags.map((t) => (
-                      <Badge
-                        key={t}
-                        variant="secondary"
-                        className="rounded-full"
-                      >
-                        {t}
+                      <Badge variant="outline" className="capitalize">
+                        {p.category.toLowerCase()}
                       </Badge>
-                    ))}
-                  </div>
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="rounded-full"
-                  >
-                    {p.cta}
-                  </Button>
-                </CardContent>
-              </Card>
+                    </CardTitle>
+                    <CardDescription className="pt-1">
+                      {p.description}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex flex-wrap gap-2">
+                      {p.tags.map((t, j) => (
+                        <motion.div key={t} initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }} transition={{ delay: j * 0.03 }}>
+                          <Badge
+                            variant="secondary"
+                            className="rounded-full"
+                          >
+                            {t}
+                          </Badge>
+                        </motion.div>
+                      ))}
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      className="rounded-full"
+                    >
+                      {p.cta}
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
             </Link>
           ))}
         </div>
@@ -227,11 +231,11 @@ export default function ProductsPage() {
             { title: "Curated", desc: "Quality questions and tags" },
             { title: "Collaboration", desc: "Groups, sharing, and invites" },
             { title: "Trusted", desc: "Privacy and control" },
-          ].map((f) => (
-            <div key={f.title} className="rounded-lg border bg-card p-4">
+          ].map((f, i) => (
+            <motion.div key={f.title} className="rounded-lg border bg-card p-4" initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.05 }}>
               <div className="font-medium">{f.title}</div>
               <div className="text-sm text-muted-foreground">{f.desc}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </section>
@@ -239,7 +243,7 @@ export default function ProductsPage() {
       {/* FAQ / CTA */}
       <section className="mx-auto max-w-5xl pb-16 md:pb-24">
         <div className="grid gap-8 md:grid-cols-2">
-          <div className="space-y-5">
+          <motion.div className="space-y-5" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }}>
             <h2 className="text-xl font-semibold tracking-tight">
               Frequently asked
             </h2>
@@ -257,15 +261,15 @@ export default function ProductsPage() {
                   q: "How do groups work?",
                   a: "Create a private group, invite teammates, and share threads securely.",
                 },
-              ].map((item) => (
-                <div key={item.q}>
+              ].map((item, i) => (
+                <motion.div key={item.q} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.04 }}>
                   <div className="font-medium">{item.q}</div>
                   <div className="text-sm text-muted-foreground">{item.a}</div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
-          <div className="rounded-xl border bg-card p-6 md:p-8">
+          </motion.div>
+          <motion.div className="rounded-xl border bg-card p-6 md:p-8" initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.2 }}>
             <div className="space-y-2">
               <h3 className="text-2xl font-semibold">Ready to get started?</h3>
               <p className="text-muted-foreground">
@@ -284,7 +288,7 @@ export default function ProductsPage() {
                 </Button>
               </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>

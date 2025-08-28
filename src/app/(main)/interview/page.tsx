@@ -4,8 +4,8 @@ import {
   Conversation,
   ConversationContent,
   ConversationScrollButton,
-} from "@/components/ai-elements/conversation";
-import { Message, MessageContent } from "@/components/ai-elements/message";
+} from "@/components/conversation";
+import { Message, MessageContent } from "@/components/message";
 import {
   PromptInput,
   PromptInputButton,
@@ -18,23 +18,23 @@ import {
   PromptInputTextarea,
   PromptInputToolbar,
   PromptInputTools,
-} from "@/components/ai-elements/prompt-input";
+} from "@/components/prompt-input";
 import { useState } from "react";
 import { useChat } from "@ai-sdk/react";
-import { Response } from "@/components/ai-elements/response";
+import { Response } from "@/components/response";
 import { User } from "lucide-react";
 import {
   Source,
   Sources,
   SourcesContent,
   SourcesTrigger,
-} from "@/components/ai-elements/source";
+} from "@/components/sources";
 import {
   Reasoning,
   ReasoningContent,
   ReasoningTrigger,
-} from "@/components/ai-elements/reasoning";
-import { Loader } from "@/components/ai-elements/loader";
+} from "@/components/reasoning";
+import { Loader } from "@/components/loader";
 
 const models = [
   {
