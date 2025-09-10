@@ -185,7 +185,7 @@ export default async function DashboardPage() {
                 key={c.id}
                 title={c.name}
                 logoUrl={c.logoUrl ?? undefined}
-                href={{ pathname: "/questions", query: { companies: c.id } }}
+                href={{ pathname: "/questions", query: { companies: c.name } }}
                 index={i}
               />
             ))}
@@ -205,7 +205,7 @@ export default async function DashboardPage() {
             <AssetCard
               key={r.id}
               title={r.name}
-              href={{ pathname: "/questions", query: { roles: r.id } }}
+              href={{ pathname: "/questions", query: { roles: r.name } }}
               index={i + 2}
             />
           ))}
@@ -277,8 +277,8 @@ function StatCard({
               trend.direction === "down"
                 ? "destructive"
                 : trend.direction === "up"
-                ? "default"
-                : "secondary"
+                  ? "default"
+                  : "secondary"
             }
             className="gap-1"
           >
@@ -302,8 +302,8 @@ function StatCard({
                 {trend.direction === "up"
                   ? "Trending up"
                   : trend.direction === "down"
-                  ? "Trending down"
-                  : "No change"}
+                    ? "Trending down"
+                    : "No change"}
               </span>
             ) : null}
             {subtitle}
