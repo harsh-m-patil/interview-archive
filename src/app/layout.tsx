@@ -20,6 +20,13 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Interview Archive",
   description: "Share interview questions with ease",
+  openGraph: {
+    title: 'Interview Archive',
+    description: 'Share interview questions with ease',
+    url: 'https://interview-archive.vercel.app',
+    siteName: 'Interview Archive',
+    images: [{ url: 'https://interview-archive.vercel.app/og.png' }]
+  },
 };
 
 export default function RootLayout({
