@@ -49,7 +49,7 @@ export default function FeaturesPage() {
             transition={{ duration: 0.5 }}
           >
             <Badge variant="secondary" className="rounded-full">
-              What's inside
+              What&apos;s inside
             </Badge>
             <h1 className="mt-4 text-4xl sm:text-5xl font-bold tracking-tight">
               Features that help you level up

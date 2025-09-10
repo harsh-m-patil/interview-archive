@@ -19,7 +19,7 @@ interface NavItem {
   name: string;
   href: Route;
   hasDropdown?: boolean;
-  dropdownItems?: { name: string; href: string; description?: string }[];
+  dropdownItems?: { name: string; href: Route; description?: string }[];
 }
 
 const navItems: NavItem[] = [
@@ -37,7 +37,7 @@ const navItems: NavItem[] = [
       },
       {
         name: "Dashboard",
-        href: "/dashboard",
+        href: "/",
         description: "Manage your data",
       },
       {
@@ -155,7 +155,6 @@ export function Navbar() {
                         {item.dropdownItems?.map((dropdownItem) => (
                           <Link
                             key={dropdownItem.name}
-                            // @ts-ignore
                             href={dropdownItem.href}
                             className="hover:bg-muted block px-4 py-3 transition-colors duration-200"
                           >
@@ -222,7 +221,6 @@ export function Navbar() {
                 {navItems.map((item) => (
                   <Link
                     key={item.name}
-                    // @ts-ignore
                     href={item.href}
                     className="text-foreground hover:bg-muted block px-4 py-3 font-medium transition-colors duration-200"
                     onClick={() => setIsMobileMenuOpen(false)}
