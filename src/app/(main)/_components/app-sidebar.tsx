@@ -1,4 +1,9 @@
-import { BadgeQuestionMark, CircleQuestionMark, Home } from "lucide-react";
+import {
+  BadgeQuestionMark,
+  CircleQuestionMark,
+  Home,
+  BarChart3,
+} from "lucide-react";
 
 import {
   Sidebar,
@@ -25,6 +30,11 @@ const items: { title: string; url: Route; icon: ReactNode }[] = [
     title: "Home",
     url: "/",
     icon: <Home />,
+  },
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: <BarChart3 />,
   },
   {
     title: "Questions",

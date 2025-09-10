@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
+import { AuthNavbar } from "@/components/auth-navbar";
 
 interface NavItem {
   name: string;
@@ -37,7 +38,7 @@ const navItems: NavItem[] = [
       },
       {
         name: "Dashboard",
-        href: "/",
+        href: "/dashboard",
         description: "Manage your data",
       },
       {
@@ -178,22 +179,8 @@ export function Navbar() {
 
           <div className="hidden items-center space-x-4 lg:flex">
             <ModeToggle />
-            <Link
-              href="/sign-in"
-              className="text-foreground font-medium transition-colors duration-200 hover:text-primary"
-            >
-              Sign In
-            </Link>
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link href="/sign-in">
-                <Button variant="secondary" className="rounded-full py-2 px-4">
-                  <span>Get Started</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-            </motion.div>
+            <AuthNavbar />
           </div>
-
           <motion.button
             className="hover:bg-muted rounded-lg p-2 transition-colors duration-200 lg:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}

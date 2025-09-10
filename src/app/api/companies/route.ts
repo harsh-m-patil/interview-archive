@@ -14,10 +14,11 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
-    const { name } = await request.json();
+    const { name, logoUrl } = await request.json();
     const company = await db.company.create({
       data: {
         name,
+        logoUrl,
       },
     });
 
