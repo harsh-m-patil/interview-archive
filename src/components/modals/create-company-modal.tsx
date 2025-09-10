@@ -98,7 +98,7 @@ export const CreateCompanyModal = () => {
                     <FormControl>
                       <FileUpload
                         endpoint="imageUploader"
-                        value={field.value}
+                        value={field.value!}
                         onChange={field.onChange}
                       />
                     </FormControl>
