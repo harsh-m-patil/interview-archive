@@ -26,9 +26,11 @@ import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { FileUpload } from "../file-upload";
 
 const formSchema = z.object({
   name: z.string(),
+  logoUrl: z.string().default(""),
 });
 
 export const CreateCompanyModal = () => {
@@ -42,6 +44,7 @@ export const CreateCompanyModal = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      logoUrl: "",
     },
   });
 
@@ -86,6 +89,23 @@ export const CreateCompanyModal = () => {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="flex items-center justify-center text-center">
+              <FormField
+                control={form.control}
+                name="logoUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <FileUpload
+                        endpoint="imageUploader"
+                        value={field.value!}
+                        onChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+            </div>
             <div className="space-y-2 px-6">
               <FormField
                 control={form.control}
