@@ -1,13 +1,13 @@
-<div align="center">
-  <img src="./assets/app.png" alt="App preview" />
-  
-  # Interview Archive
+![App preview](./assets/app.png)
 
-**Share interview questions with ease**
-
-</div>
+# Interview Archive
+> **Share interview questions with ease**
 
 A comprehensive platform for storing, organizing, and sharing interview questions and answers. Built with modern web technologies to help developers prepare for technical interviews and contribute to the community knowledge base.
+
+## Architecture
+
+![Architecture Diagram](./assets/architechture.png)
 
 ## Features
 
