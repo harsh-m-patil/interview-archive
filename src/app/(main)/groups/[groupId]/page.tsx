@@ -1,5 +1,6 @@
 "use client";
 
+import { use } from "react";
 import { useGroupDetails } from "@/hooks/query/use-group-details";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,7 @@ type GroupDetailsPageProps = {
 };
 
 export default function GroupDetailsPage({ params }: GroupDetailsPageProps) {
-  const { groupId } = React.use(params);
+  const { groupId } = use(params);
   const { data: group, isLoading, error } = useGroupDetails(groupId);
 
   const copyInviteLink = () => {
