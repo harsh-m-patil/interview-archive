@@ -13,9 +13,10 @@ import {
 } from "@/components/ui/sidebar";
 import { Group, Company, Tag, Role } from "@/generated/prisma";
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, ExternalLink } from "lucide-react";
 import { parseAsArrayOf, parseAsString, useQueryState } from "nuqs";
 import { ReactNode } from "react";
+import Link from "next/link";
 
 type DataMap = {
   tag: Tag;
@@ -79,22 +80,32 @@ export function CollapsibleSelect<T extends DataType>({
                 {data.data.map((item) => {
                   const isSelected = selectedItemNames.includes(item.name);
                   return (
-                    <SidebarMenuItem
-                      key={item.id}
-                      className={cn(
-                        "cursor-pointer text-sm px-2 py-1 rounded-md",
-                        isSelected && "bg-muted font-semibold",
-                      )}
-                      onClick={() => onToggleItem(item)}
-                    >
-                      <div className="flex items-center gap-2">
-                        {data.type === "group" && "imageUrl" in item ? (
-                          <UserAvatar
-                            src={item.imageUrl!}
-                            className="size-5 md:size-5"
-                          />
-                        ) : null}
-                        {item.name}
+                    <SidebarMenuItem key={item.id} className="group/menu-item">
+                      <div
+                        className={cn(
+                          "cursor-pointer text-sm px-2 py-1 rounded-md flex items-center justify-between",
+                          isSelected && "bg-muted font-semibold",
+                        )}
+                        onClick={() => onToggleItem(item)}
+                      >
+                        <div className="flex items-center gap-2">
+                          {data.type === "group" && "imageUrl" in item ? (
+                            <UserAvatar
+                              src={item.imageUrl!}
+                              className="size-5 md:size-5"
+                            />
+                          ) : null}
+                          {item.name}
+                        </div>
+                        {data.type === "group" && (
+                          <Link
+                            href={`/groups/${item.id}`}
+                            className="opacity-0 group-hover/menu-item:opacity-100 transition-opacity p-1 hover:bg-accent rounded"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <ExternalLink className="h-3 w-3" />
+                          </Link>
+                        )}
                       </div>
                     </SidebarMenuItem>
                   );
