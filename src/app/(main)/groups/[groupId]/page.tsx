@@ -25,6 +25,7 @@ import {
   Users,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { toast } from "sonner";
 import { ModalButton } from "../../_components/modal-button";
 
@@ -94,10 +95,12 @@ export default function GroupDetailsPage({ params }: GroupDetailsPageProps) {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           {group.imageUrl && (
-            <img
+            <Image
               src={group.imageUrl}
               alt={group.name}
-              className="w-12 h-12 rounded-lg object-cover"
+              width={48}
+              height={48}
+              className="rounded-lg object-cover"
             />
           )}
           <div>
@@ -142,7 +145,17 @@ export default function GroupDetailsPage({ params }: GroupDetailsPageProps) {
                 </p>
               ) : (
                 <div className="space-y-4">
-                  {group.questions.map((question: any) => (
+                  {group.questions.map((question: { 
+                    id: string; 
+                    title: string; 
+                    content: string; 
+                    createdAt: string; 
+                    createdBy: { name: string; image?: string }; 
+                    Company?: { name: string }; 
+                    role?: { name: string }; 
+                    tags: { id: string; name: string }[]; 
+                    answers: { id: string }[] 
+                  }) => (
                     <Card key={question.id} className="border-l-4 border-l-primary">
                       <CardHeader className="pb-3">
                         <div className="flex items-start justify-between">
@@ -186,7 +199,7 @@ export default function GroupDetailsPage({ params }: GroupDetailsPageProps) {
                             {question.role && (
                               <Badge variant="outline">{question.role.name}</Badge>
                             )}
-                            {question.tags.map((tag: any) => (
+                            {question.tags.map((tag: { id: string; name: string }) => (
                               <Badge key={tag.id} variant="outline">
                                 {tag.name}
                               </Badge>
@@ -215,7 +228,11 @@ export default function GroupDetailsPage({ params }: GroupDetailsPageProps) {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {group.members.map((member: any) => (
+                {group.members.map((member: {
+                  id: string;
+                  role: string;
+                  user: { name: string; email: string; image?: string }
+                }) => (
                   <div
                     key={member.id}
                     className="flex items-center justify-between"
