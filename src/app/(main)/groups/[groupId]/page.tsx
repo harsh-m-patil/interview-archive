@@ -290,5 +290,3 @@ export default function GroupDetailsPage({ params }: GroupDetailsPageProps) {
     </div>
   );
 }
-
-import React from "react";
