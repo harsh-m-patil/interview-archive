@@ -1,17 +1,17 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { ThemeProvider } from "./theme-provider"
+import { TRPCProvider } from "@/trpc/client";
+import { ThemeProvider } from "./theme-provider";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
       attribute="class"
       defaultTheme="system"
-      enableSystem
       disableTransitionOnChange
+      enableSystem
     >
-      {children}
+      <TRPCProvider>{children}</TRPCProvider>
     </ThemeProvider>
-  )
+  );
 }

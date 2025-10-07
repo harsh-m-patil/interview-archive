@@ -2,6 +2,7 @@ import {
   boolean,
   index,
   pgTable,
+  // biome-ignore lint/nursery/noDeprecatedImports: docs
   primaryKey,
   text,
   timestamp,
