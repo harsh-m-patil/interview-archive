@@ -8,15 +8,19 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+import { user } from "./auth";
 
 export const questionsTable = pgTable(
   "questions",
   {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").defaultRandom().primaryKey(),
     title: text("title").notNull(),
     description: text("description").notNull(),
     aiAnswer: text("ai_answer"),
     companyId: uuid("company_id").references(() => companiesTable.id, {
+      onDelete: "set null",
+    }),
+    postedBy: text("posted_by").references(() => user.id, {
       onDelete: "set null",
     }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -32,7 +36,7 @@ export type QuestionInsert = typeof questionsTable.$inferInsert;
 export const answersTable = pgTable(
   "answers",
   {
-    id: uuid("id").primaryKey(),
+    id: uuid("id").defaultRandom().primaryKey(),
     questionId: uuid("question_id")
       .notNull()
       .references(() => questionsTable.id, { onDelete: "cascade" }),
@@ -49,7 +53,7 @@ export type AnswerInsert = typeof answersTable.$inferInsert;
 
 // tables for filtering
 export const companiesTable = pgTable("companies", {
-  id: uuid("id").primaryKey().notNull(),
+  id: uuid("id").defaultRandom().primaryKey().notNull(),
   name: text("name").notNull(),
   logoUrl: text("logo_url"),
   website: text("website"),
@@ -59,7 +63,7 @@ export type Company = typeof companiesTable.$inferSelect;
 export type CompanyInsert = typeof companiesTable.$inferInsert;
 
 export const rolesTable = pgTable("roles", {
-  id: uuid("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
 });
 
@@ -67,7 +71,7 @@ export type Role = typeof rolesTable.$inferSelect;
 export type RoleInsert = typeof rolesTable.$inferInsert;
 
 export const tagsTable = pgTable("tags", {
-  id: uuid("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
 });
 

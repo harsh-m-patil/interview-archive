@@ -23,5 +23,12 @@
   },
   "extends": [
     "ultracite"
-  ]
+  ],
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noConsole": "warn"
+      }
+    }
+  }
 }
