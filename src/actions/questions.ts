@@ -1,3 +1,5 @@
+"use server";
+
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import type z from "zod";
@@ -42,7 +44,6 @@ export async function createQuestion(
   _: unknown,
   formData: FormData
 ): Promise<createQuestionResponse> {
-  "use server";
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
