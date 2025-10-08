@@ -1,3 +1,6 @@
+import { Suspense } from "react";
+import { Loading } from "@/components/custom/loading";
+
 export default function QuestionLayout({
   children,
 }: {
@@ -10,7 +13,7 @@ export default function QuestionLayout({
       <h1 className="text-balance border-b bg-gradient-to-b from-primary via-foreground/85 to-foreground/50 bg-clip-text px-4 py-6 font-bold text-2xl tracking-tighter md:text-3xl">
         Question
       </h1>
-      {children}
+      <Suspense fallback={<Loading />}>{children}</Suspense>
     </div>
   );
 }
