@@ -3,7 +3,5 @@ export default function CreateQuestionLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return (
-    <div className="flex h-screen items-center justify-center">{children}</div>
-  );
+  return <div className="h-[93svh] border-t">{children}</div>;
 }

@@ -1,3 +1,4 @@
+import { sql } from "drizzle-orm";
 import {
   boolean,
   index,
@@ -27,7 +28,13 @@ export const questionsTable = pgTable(
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
     isDeleted: boolean("is_deleted").default(false).notNull(),
   },
-  (t) => [index("company_idx").on(t.companyId)]
+  (t) => [
+    index("company_idx").on(t.companyId),
+    index("title_search_index").using(
+      "gin",
+      sql`to_tsvector('english', ${t.title})`
+    ),
+  ]
 );
 
 export type Question = typeof questionsTable.$inferSelect;

@@ -1,12 +1,18 @@
-import { eq } from "drizzle-orm";
+import { and, eq, type SQL, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { user } from "@/db/schema/auth";
 import { companiesTable, questionsTable } from "@/db/schema/questions";
-import { postQuestionSchema } from "@/lib/zod-schemas";
+import { getQuestionsInputSchema, postQuestionSchema } from "@/lib/zod-schemas";
 import { baseProcedure, createTRPCRouter, privateProcedure } from "../init";
 
 export const questionRouter = createTRPCRouter({
-  get: baseProcedure.query(async () => {
+  get: baseProcedure.input(getQuestionsInputSchema).query(async ({ input }) => {
+    const whereConditions: SQL<unknown>[] = [];
+    if (input.search && input.search !== "") {
+      whereConditions.push(
+        sql`to_tsvector('english', ${questionsTable.title}) @@ to_tsquery('english', ${input.search})`
+      );
+    }
     try {
       const questions = await db
         .select({
@@ -24,7 +30,8 @@ export const questionRouter = createTRPCRouter({
           companiesTable,
           eq(companiesTable.id, questionsTable.companyId)
         )
-        .leftJoin(user, eq(user.id, questionsTable.postedBy));
+        .leftJoin(user, eq(user.id, questionsTable.postedBy))
+        .where(and(...whereConditions));
 
       return {
         status: "success",

@@ -38,7 +38,7 @@ export function QuestionsSelect({ title, data, status }: QuestionSelectProps) {
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder={`Select a ${title}`} />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="max-w-xl">
           <SelectGroup>
             <SelectLabel>{title}</SelectLabel>
             {values.map((v) => (

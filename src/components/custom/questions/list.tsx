@@ -1,10 +1,18 @@
 "use client";
 
+import { useQueryState } from "nuqs";
+import { useDebouncedValue } from "@/hooks/useDebounce";
 import { trpc } from "@/trpc/client";
 import { QuestionCard } from "./card";
 
 export const QuestionsList = () => {
-  const { data: api, isLoading } = trpc.questions.get.useQuery();
+  const [search, _] = useQueryState("search");
+
+  const DEBOUNCE_TIME = 300;
+  const debouncedSearch = useDebouncedValue(search, DEBOUNCE_TIME);
+  const { data: api, isLoading } = trpc.questions.get.useQuery({
+    search: debouncedSearch,
+  });
 
   if (isLoading) {
     return <div>Loading ...</div>;
@@ -24,7 +32,7 @@ export const QuestionsList = () => {
         <div>Loading...</div>
       ) : (
         api.data.map((question) => (
-          <QuestionCard key={question.id} question={question} tags={[]} />
+          <QuestionCard key={question.id} question={question} />
         ))
       )}
     </div>

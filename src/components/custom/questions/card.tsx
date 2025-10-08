@@ -17,8 +17,8 @@ type QuestionCardProps = {
     "isDeleted" | "companyId" | "updatedAt" | "createdAt"
   > & {
     createdAt: string;
-    postedByImage: string;
-    companyName: string;
+    postedByImage: string | null;
+    companyName: string | null;
   };
 };
 
@@ -42,8 +42,11 @@ export function QuestionCard({ question }: QuestionCardProps) {
       <CardFooter className="flex items-center justify-between">
         <div className="flex items-center space-x-2 rounded-md border px-4 py-2">
           <Avatar>
-            <AvatarImage alt="@shadcn" src={question.postedByImage} />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage
+              alt="posted-by-image"
+              src={question.postedByImage || "/placeholder.png"}
+            />
+            <AvatarFallback>HP</AvatarFallback>
           </Avatar>
           <p className="text-muted-foreground text-sm">{question.postedBy}</p>
         </div>

@@ -19,42 +19,55 @@ import { Textarea } from "@/components/ui/textarea";
 export default function PostQuestionPage() {
   const [state, action, isPending] = useActionState(createQuestion, null);
   return (
-    <form action={action}>
-      <FieldSet className="min-w-xl">
-        <FieldLegend>Post a Question</FieldLegend>
-        <FieldDescription>
-          Share the question with the community.
-        </FieldDescription>
-        <FieldGroup>
-          <Field>
-            <FieldLabel htmlFor="title">Title</FieldLabel>
-            <Input
-              autoComplete="off"
-              id="title"
-              name="title"
-              placeholder="What does the http statusCode 418 means ?"
-            />
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="description">Description</FieldLabel>
-            <Textarea
-              autoComplete="off"
-              id="description"
-              name="description"
-              placeholder="Describe the question in detail"
-            />
-          </Field>
-        </FieldGroup>
-        <FieldGroup>
-          <Field>
-            <RoleSelect />
-            <CompanySelect />
-          </Field>
-        </FieldGroup>
-      </FieldSet>
-      <Button aria-disabled={isPending} disabled={isPending} type="submit">
-        Post
-      </Button>
-    </form>
+    <div className="relative mx-auto flex h-full w-5xl items-center justify-center border-x">
+      <div className="-col-start-1 absolute left-[-20] row-span-full row-start-1 hidden h-full w-20 border-x border-x-(--pattern-fg) bg-[image:repeating-linear-gradient(315deg,_var(--pattern-fg)_0,_var(--pattern-fg)_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px] bg-fixed [--pattern-fg:var(--color-black)]/5 md:block dark:[--pattern-fg:var(--color-white)]/10" />
+      <div className="absolute right-[-20] col-start-1 row-span-full row-start-1 hidden h-full w-20 border-x border-x-(--pattern-fg) bg-[image:repeating-linear-gradient(315deg,_var(--pattern-fg)_0,_var(--pattern-fg)_1px,_transparent_0,_transparent_50%)] bg-[size:10px_10px] bg-fixed [--pattern-fg:var(--color-black)]/5 md:block dark:[--pattern-fg:var(--color-white)]/10" />
+      <form action={action} className="mx-auto max-w-3xl rounded-lg border p-6">
+        <FieldSet className="min-w-xl">
+          <FieldLegend>Post a Question</FieldLegend>
+          <FieldDescription>
+            Share the question with the community.
+          </FieldDescription>
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="title">Title</FieldLabel>
+              <Input
+                autoComplete="off"
+                defaultValue={state?.prevState?.title || ""}
+                id="title"
+                name="title"
+                placeholder="What does the http statusCode 418 means ?"
+                required
+              />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="description">Description</FieldLabel>
+              <Textarea
+                autoComplete="off"
+                defaultValue={state?.prevState?.description || ""}
+                id="description"
+                name="description"
+                placeholder="Describe the question in detail"
+                required
+              />
+            </Field>
+          </FieldGroup>
+          <FieldGroup>
+            <Field>
+              <RoleSelect />
+              <CompanySelect />
+            </Field>
+          </FieldGroup>
+        </FieldSet>
+        <Button
+          aria-disabled={isPending}
+          className="mt-4 w-full"
+          disabled={isPending}
+          type="submit"
+        >
+          Post
+        </Button>
+      </form>
+    </div>
   );
 }
