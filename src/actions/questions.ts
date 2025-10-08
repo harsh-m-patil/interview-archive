@@ -1,9 +1,9 @@
-"use server";
-
+import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import type z from "zod";
 import { db } from "@/db";
-import { questionsTable } from "@/db/schema/questions";
+import { user } from "@/db/schema/auth";
+import { companiesTable, questionsTable } from "@/db/schema/questions";
 import { auth } from "@/lib/auth";
 import type { postQuestionSchema } from "@/lib/zod-schemas";
 
@@ -42,6 +42,7 @@ export async function createQuestion(
   _: unknown,
   formData: FormData
 ): Promise<createQuestionResponse> {
+  "use server";
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
@@ -81,5 +82,47 @@ export async function createQuestion(
         role: formData.get("role") as string,
       },
     };
+  }
+}
+
+export async function getQuestion(questionId: string) {
+  "use server";
+  try {
+    const [question] = await db
+      .select({
+        title: questionsTable.title,
+        description: questionsTable.description,
+        company: companiesTable.name,
+        aiAnswer: questionsTable.aiAnswer,
+        userName: user.name,
+        userImage: user.image,
+      })
+      .from(questionsTable)
+      .leftJoin(companiesTable, eq(companiesTable.id, questionsTable.companyId))
+      .leftJoin(user, eq(user.id, questionsTable.postedBy))
+      .where(eq(questionsTable.id, questionId));
+
+    if (!question) {
+      return {
+        status: "failed",
+        reason: "NOT_FOUND",
+        message: "Question not found",
+        data: null,
+      } as const;
+    }
+
+    return {
+      status: "success",
+      message: "Question fetched successfully",
+      data: question,
+    } as const;
+  } catch (error) {
+    console.error(error);
+    return {
+      status: "failed",
+      reason: "INTERNAL_SERVER_ERROR",
+      message: "Failed to fetch question",
+      data: null,
+    } as const;
   }
 }
