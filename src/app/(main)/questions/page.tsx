@@ -1,20 +1,41 @@
+import { Library } from "lucide-react";
 import { Suspense } from "react";
+import { LayoutSelector } from "@/components/custom/questions/layout-selector";
 import { QuestionsList } from "@/components/custom/questions/list";
 import { CompanySelect } from "@/components/custom/questions/select/company";
 import { RoleSelect } from "@/components/custom/questions/select/role";
 import { SearchInput } from "@/components/custom/search-input";
+import { Badge } from "@/components/ui/badge";
 
 export default function Page() {
   return (
     <Suspense fallback={null}>
       <div className="mx-auto max-w-7xl p-4">
-        <h1 className="mx-auto text-balance bg-gradient-to-b from-primary via-foreground/85 to-foreground/50 bg-clip-text px-4 py-6 text-center font-bold text-3xl text-transparent tracking-tighter md:text-4xl lg:text-5xl xl:text-6xl">
-          Search Questions posted by Community
-        </h1>
+        <div className="flex flex-col items-center justify-center pb-6">
+          <Badge
+            className="group rounded-full border border-primary/20 bg-primary/10 px-4 py-1 text-[0.9rem] shadow-primary shadow-sm hover:shadow-md"
+            variant="secondary"
+          >
+            <Library className="group-hover:-rotate-45 transition-transform duration-300" />
+            Community Question Library
+          </Badge>
+          <h1 className="mx-auto text-balance bg-gradient-to-b from-primary via-foreground/85 to-foreground/50 bg-clip-text px-4 py-6 text-center font-bold text-4xl text-transparent tracking-tighter md:text-5xl lg:text-6xl xl:text-6xl">
+            Discover & Share Interview Questions
+          </h1>
+          <p className="text-center text-lg text-muted-foreground">
+            Explore a curated collection of Interview Questions from the
+            community
+          </p>
+        </div>
         <SearchInput />
-        <div className="mt-2 flex items-center justify-end gap-4">
-          <CompanySelect />
-          <RoleSelect />
+        <div className="mt-2 flex items-center justify-between gap-4">
+          {/* Filters */}
+          <div className="flex items-center gap-2">
+            <CompanySelect />
+            <RoleSelect />
+          </div>
+          {/* Layout */}
+          <LayoutSelector />
         </div>
         <QuestionsList />
       </div>

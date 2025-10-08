@@ -2,13 +2,15 @@
 
 import { useQueryState } from "nuqs";
 import { useDebouncedValue } from "@/hooks/useDebounce";
+import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
 import { QuestionCard } from "./card";
 
 export const QuestionsList = () => {
-  const [search, _] = useQueryState("search");
-
+  const [search] = useQueryState("search");
+  const [layout] = useQueryState("layout");
   const DEBOUNCE_TIME = 300;
+
   const debouncedSearch = useDebouncedValue(search, DEBOUNCE_TIME);
   const { data: api, isLoading } = trpc.questions.get.useQuery({
     search: debouncedSearch,
@@ -27,7 +29,15 @@ export const QuestionsList = () => {
   }
 
   return (
-    <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div
+      // TODO: Add animation for layout shifts using framer motion
+      className={cn(
+        "mt-6 grid gap-4",
+        layout === "grid"
+          ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          : "grid-cols-1"
+      )}
+    >
       {isLoading ? (
         <div>Loading...</div>
       ) : (
