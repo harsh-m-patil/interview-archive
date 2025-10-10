@@ -26,7 +26,9 @@ export function Navbar() {
           </Link>
         ))}
         <div className="flex items-center justify-between gap-4">
-          <Button>Sign In</Button>
+          <Link href="/sign-in">
+            <Button>Sign In</Button>
+          </Link>
           <ModeToggle />
         </div>
       </div>
