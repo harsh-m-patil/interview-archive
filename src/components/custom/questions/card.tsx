@@ -26,10 +26,10 @@ export function QuestionCard({ question }: QuestionCardProps) {
   return (
     <Card className="group transition-transform duration-300 hover:scale-[102%]">
       <CardHeader>
-        <h2 className="font-semibold text-clamp-1 text-lg transition-colors duration-300 group-hover:text-primary">
+        <h2 className="line-clamp-1 font-semibold text-lg transition-colors duration-300 group-hover:text-primary">
           {question.title}
         </h2>
-        <p className="mt-2 line-clamp-3 text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
+        <p className="mt-2 line-clamp-2 text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
           {question.description}
         </p>
       </CardHeader>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useQueryState } from "nuqs";
+import { Loading } from "@/components/custom/loading";
 import { useDebouncedValue } from "@/hooks/useDebounce";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/trpc/client";
@@ -12,20 +13,33 @@ export const QuestionsList = () => {
   const DEBOUNCE_TIME = 300;
 
   const debouncedSearch = useDebouncedValue(search, DEBOUNCE_TIME);
-  const { data: api, isLoading } = trpc.questions.get.useQuery({
+  const {
+    data: api,
+    isLoading,
+    error,
+    isError,
+  } = trpc.questions.get.useQuery({
     search: debouncedSearch,
   });
 
   if (isLoading) {
-    return <div>Loading ...</div>;
+    return <Loading />;
   }
 
-  if (api?.status === "failed") {
-    return <div>Error: {api.message}</div>;
+  if (isError) {
+    return (
+      <div className="flex h-96 items-center justify-center text-5xl text-rose-300 tracking-tighter">
+        Error: {error.message}
+      </div>
+    );
   }
 
   if (!api || api.data.length === 0) {
-    return <div>No Question found</div>;
+    return (
+      <div className="flex h-96 items-center justify-center text-5xl text-muted-foreground tracking-tighter">
+        No Question found
+      </div>
+    );
   }
 
   return (
@@ -33,9 +47,9 @@ export const QuestionsList = () => {
       // TODO: Add animation for layout shifts using framer motion
       className={cn(
         "mt-6 grid gap-4",
-        layout === "grid"
-          ? "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-          : "grid-cols-1"
+        layout === "flex"
+          ? "grid-cols-1"
+          : "grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
       )}
     >
       {isLoading ? (

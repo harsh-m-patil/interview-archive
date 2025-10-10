@@ -21,3 +21,8 @@ export const getQuestionsInputSchema = z.object({
 export const getQuestionInputSchema = z.object({
   id: z.uuid(),
 });
+
+export const completionsSchema = z.object({
+  prompt: z.string(),
+  questionId: z.uuid(),
+});

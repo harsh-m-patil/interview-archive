@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { and, eq, type SQL, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { user } from "@/db/schema/auth";
@@ -40,10 +41,11 @@ export const questionRouter = createTRPCRouter({
       } as const;
     } catch (err) {
       console.error("Error fetching questions:", err);
-      return {
-        status: "failed",
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
         message: "Failed to fetch questions",
-      } as const;
+        cause: err,
+      });
     }
   }),
   create: privateProcedure
@@ -66,10 +68,11 @@ export const questionRouter = createTRPCRouter({
         } as const;
       } catch (err) {
         console.error("Error creating question:", err);
-        return {
-          status: "failed",
-          message: "failed to post question",
-        } as const;
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to create question",
+          cause: err,
+        });
       }
     }),
 });

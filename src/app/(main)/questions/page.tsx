@@ -1,4 +1,5 @@
 import { Library } from "lucide-react";
+import Link from "next/link";
 import { Suspense } from "react";
 import { LayoutSelector } from "@/components/custom/questions/layout-selector";
 import { QuestionsList } from "@/components/custom/questions/list";
@@ -6,6 +7,7 @@ import { CompanySelect } from "@/components/custom/questions/select/company";
 import { RoleSelect } from "@/components/custom/questions/select/role";
 import { SearchInput } from "@/components/custom/search-input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export default function Page() {
   return (
@@ -27,10 +29,15 @@ export default function Page() {
             community
           </p>
         </div>
-        <SearchInput />
-        <div className="mt-2 flex items-center justify-between gap-4">
+        <div className="flex gap-2">
+          <SearchInput />
+          <Link href="/questions/new">
+            <Button variant="outline">New</Button>
+          </Link>
+        </div>
+        <div className="mt-2 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           {/* Filters */}
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <CompanySelect />
             <RoleSelect />
           </div>

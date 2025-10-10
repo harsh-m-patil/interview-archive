@@ -8,7 +8,7 @@ export function LayoutSelector() {
   const [layout, setLayout] = useQueryState("layout");
 
   return (
-    <div className="flex rounded-lg bg-primary/10 px-2 py-1">
+    <div className="flex max-w-24 rounded-lg bg-primary/10 px-2 py-1">
       <Button
         className="transition-all duration-300"
         onClick={() => setLayout("grid")}

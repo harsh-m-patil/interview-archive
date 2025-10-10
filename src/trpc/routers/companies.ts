@@ -1,6 +1,8 @@
+import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { companiesTable } from "@/db/schema/questions";
 import { baseProcedure, createTRPCRouter } from "../init";
+
 export const companiesRouter = createTRPCRouter({
   get: baseProcedure.query(async () => {
     try {
@@ -15,10 +17,11 @@ export const companiesRouter = createTRPCRouter({
       } as const;
     } catch (err) {
       console.error("Failed to fetch companies", err);
-      return {
-        status: "failed",
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
         message: "Failed to fetch companies",
-      } as const;
+        cause: err,
+      });
     }
   }),
 });

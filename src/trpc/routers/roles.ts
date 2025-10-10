@@ -1,6 +1,8 @@
+import { TRPCError } from "@trpc/server";
 import { db } from "@/db";
 import { rolesTable } from "@/db/schema/questions";
 import { baseProcedure, createTRPCRouter } from "../init";
+
 export const rolesRouter = createTRPCRouter({
   get: baseProcedure.query(async () => {
     try {
@@ -15,10 +17,11 @@ export const rolesRouter = createTRPCRouter({
       } as const;
     } catch (err) {
       console.error("Failed to fetch roles", err);
-      return {
-        status: "failed",
+      throw new TRPCError({
+        code: "INTERNAL_SERVER_ERROR",
         message: "Failed to fetch roles",
-      } as const;
+        cause: err,
+      });
     }
   }),
 });

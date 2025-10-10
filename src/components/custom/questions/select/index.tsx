@@ -35,10 +35,10 @@ export function QuestionsSelect({ title, data, status }: QuestionSelectProps) {
   return (
     <>
       <Select disabled={status !== "success"} name={title.toLowerCase()}>
-        <SelectTrigger className="w-[180px]">
+        <SelectTrigger className="w-full sm:w-[180px]">
           <SelectValue placeholder={`Select a ${title}`} />
         </SelectTrigger>
-        <SelectContent className="max-w-xl">
+        <SelectContent className="w-full sm:max-w-xl">
           <SelectGroup>
             <SelectLabel>{title}</SelectLabel>
             {values.map((v) => (
