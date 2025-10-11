@@ -1,8 +1,10 @@
 import { Streamdown } from "streamdown";
 import { getQuestion } from "@/actions/questions";
-import { AiAnswer } from "@/components/custom/questions/ai-answer";
+import { AiAnswer } from "@/components/custom/questions/answer/ai-answer";
+import Answers from "@/components/custom/questions/answer/answers";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type QuestionPageProps = {
   params: Promise<{
@@ -63,12 +65,23 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
           {question.description}
         </Streamdown>
       </div>
-      <AiAnswer
-        aiAnswer={question.aiAnswer}
-        description={question.description}
-        questionId={questionId}
-        title={question.title}
-      />
+      <Tabs className="ml-2" defaultValue="answers">
+        <TabsList>
+          <TabsTrigger value="answers">Answers By Community</TabsTrigger>
+          <TabsTrigger value="ai-answer">AI Answer</TabsTrigger>
+        </TabsList>
+        <TabsContent value="answers">
+          <Answers questionId={questionId} />
+        </TabsContent>
+        <TabsContent value="ai-answer">
+          <AiAnswer
+            aiAnswer={question.aiAnswer}
+            description={question.description}
+            questionId={questionId}
+            title={question.title}
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

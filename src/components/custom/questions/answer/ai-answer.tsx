@@ -1,6 +1,7 @@
 "use client";
 
 import { useCompletion } from "@ai-sdk/react";
+import { Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Streamdown } from "streamdown";
 import { Button } from "@/components/ui/button";
@@ -48,6 +49,7 @@ export function AiAnswer({
             onClick={handleClick}
             variant="secondary"
           >
+            <Sparkles className="size-4" />
             Generate
           </Button>
         </div>

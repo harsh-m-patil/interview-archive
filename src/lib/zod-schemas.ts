@@ -26,3 +26,11 @@ export const completionsSchema = z.object({
   prompt: z.string(),
   questionId: z.uuid(),
 });
+
+export const answerSchema = z.object({
+  content: z
+    .string()
+    .min(2)
+    .max(5000, "Answer must be between 2 and 5000 characters"),
+  questionId: z.uuid(),
+});

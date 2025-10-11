@@ -21,7 +21,7 @@ export async function POST(req: Request) {
   const result = streamText({
     model: google("gemini-2.5-flash"),
     system:
-      "Answer this interview question as if you are a interviewee and provide an ideal answer.",
+      "Answer this interview question as if you are a interviewee and provide an ideal answer. Do not",
     prompt,
     onFinish: async ({ text }) => {
       await db

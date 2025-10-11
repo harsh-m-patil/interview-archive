@@ -48,6 +48,9 @@ export const answersTable = pgTable(
       .notNull()
       .references(() => questionsTable.id, { onDelete: "cascade" }),
     content: text("content").notNull(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
     isDeleted: boolean("is_deleted").default(false).notNull(),
