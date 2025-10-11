@@ -4,8 +4,9 @@ import { useState } from "react";
 import { Streamdown } from "streamdown";
 import { Loading } from "@/components/custom/loading";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { trpc } from "@/trpc/client";
+import { UserProfile } from "../../user/profile";
 import AnswerForm from "./answer-form";
 
 export default function Answers({ questionId }: { questionId: string }) {
@@ -49,6 +50,13 @@ export default function Answers({ questionId }: { questionId: string }) {
           <div className="flex flex-col gap-4">
             {res.data.map((answer) => (
               <Card key={answer.id}>
+                <CardHeader>
+                  <UserProfile
+                    className="max-w-72"
+                    userImage={answer.userImage}
+                    userName={answer.userName}
+                  />
+                </CardHeader>
                 <CardContent>
                   <Streamdown>{answer.content}</Streamdown>
                 </CardContent>

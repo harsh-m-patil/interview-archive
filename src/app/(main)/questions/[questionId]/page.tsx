@@ -2,7 +2,7 @@ import { Streamdown } from "streamdown";
 import { getQuestion } from "@/actions/questions";
 import { AiAnswer } from "@/components/custom/questions/answer/ai-answer";
 import Answers from "@/components/custom/questions/answer/answers";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserProfile } from "@/components/custom/user/profile";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -45,16 +45,10 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
           <h2 className="font-semibold text-xl md:text-2xl">
             {question.title}
           </h2>
-          <div className="flex max-w-sm items-center gap-3 overflow-hidden rounded-md border px-2 py-2">
-            <Avatar>
-              <AvatarImage
-                alt={question.userName || "Deleted User"}
-                src={question.userImage || "/placeholder.png"}
-              />
-              <AvatarFallback>HP</AvatarFallback>
-            </Avatar>
-            <p>{question.userName || "Deleted User"}</p>
-          </div>
+          <UserProfile
+            userImage={question.userImage || "/placeholder.png"}
+            userName={question.userName}
+          />
         </div>
         <Badge className="mb-2 ml-4 rounded-full px-4 py-1" variant="secondary">
           {question.company || "Unknown"}

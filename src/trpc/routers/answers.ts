@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import z from "zod";
 import { db } from "@/db";
+import { user } from "@/db/schema/auth";
 import { answersTable } from "@/db/schema/questions";
 import { answerSchema } from "@/lib/zod-schemas";
 import { baseProcedure, createTRPCRouter, privateProcedure } from "../init";
@@ -20,8 +21,11 @@ export const answersRouter = createTRPCRouter({
             id: answersTable.id,
             content: answersTable.content,
             createdAt: answersTable.createdAt,
+            userName: user.name,
+            userImage: user.image,
           })
           .from(answersTable)
+          .leftJoin(user, eq(user.id, answersTable.userId))
           .where(eq(answersTable.questionId, input.questionId));
 
         return {
