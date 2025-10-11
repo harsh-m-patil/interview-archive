@@ -23,6 +23,13 @@ export async function POST(req: Request) {
     system:
       "Answer this interview question as if you are a interviewee and provide an ideal answer. Do not",
     prompt,
+    providerOptions: {
+      google: {
+        thinkingConfig: {
+          thinkingBudget: 0,
+        },
+      },
+    },
     onFinish: async ({ text }) => {
       await db
         .update(questionsTable)

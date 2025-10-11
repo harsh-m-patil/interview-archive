@@ -61,7 +61,9 @@ export function AiAnswer({
           </Streamdown>
         ) : (
           <Streamdown className="mt-3 max-w-5xl text-foreground/80">
-            {completion}
+            {completion
+              ? completion
+              : "> Click the generate button and witness some ai magic"}
           </Streamdown>
         )}
         {error && (
