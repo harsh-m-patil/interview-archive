@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryState } from "nuqs";
 import { FieldError } from "@/components/ui/field";
 import {
   Select,
@@ -26,6 +27,8 @@ type QuestionSelectProps = {
 };
 
 export function QuestionsSelect({ title, data, status }: QuestionSelectProps) {
+  const [value, setValue] = useQueryState(title.toLowerCase());
+
   let values: Value[] = [];
 
   if (data && data.status === "success") {
@@ -34,13 +37,19 @@ export function QuestionsSelect({ title, data, status }: QuestionSelectProps) {
 
   return (
     <>
-      <Select disabled={status !== "success"} name={title.toLowerCase()}>
+      <Select
+        disabled={status !== "success"}
+        name={title.toLowerCase()}
+        onValueChange={(val) => setValue(val === "all" ? null : val)}
+        value={value || "all"}
+      >
         <SelectTrigger className="w-full sm:w-[180px]">
           <SelectValue placeholder={`Select a ${title}`} />
         </SelectTrigger>
         <SelectContent className="w-full sm:max-w-xl">
           <SelectGroup>
             <SelectLabel>{title}</SelectLabel>
+            <SelectItem value="all">All</SelectItem>
             {values.map((v) => (
               <SelectItem key={v.id} value={v.id}>
                 {v.name}

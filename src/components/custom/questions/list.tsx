@@ -21,6 +21,7 @@ export const QuestionsList = () => {
   const [company] = useQueryState("company");
   const [role] = useQueryState("role");
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
+  // biome-ignore lint/style/noMagicNumbers: Not magic want a number divisible by 3
   const [limit] = useQueryState("limit", parseAsInteger.withDefault(9));
 
   const DEBOUNCE_TIME = 300;

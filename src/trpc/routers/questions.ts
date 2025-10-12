@@ -14,6 +14,11 @@ export const questionRouter = createTRPCRouter({
         sql`to_tsvector('english', ${questionsTable.title}) @@ to_tsquery('english', ${input.search})`
       );
     }
+
+    if (input.company) {
+      whereConditions.push(eq(questionsTable.companyId, input.company));
+    }
+
     try {
       // calculate offset using page and limit
       const offset = (input.page - 1) * input.limit;
