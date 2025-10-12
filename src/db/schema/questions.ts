@@ -4,7 +4,7 @@ import {
   index,
   json,
   pgTable,
-  // biome-ignore lint/nursery/noDeprecatedImports: docs
+  // biome-ignore lint/nursery/noDeprecatedImports: primaryKey is deprecated, but currently required for composite primary keys in Drizzle ORM. No non-deprecated alternative available as of June 2024. See https://github.com/drizzle-team/drizzle-orm/issues/617
   primaryKey,
   text,
   timestamp,
