@@ -1,8 +1,9 @@
-import { db } from "@/lib/db";
-import { SYSTEM_PROMPT_INTERVIEWER } from "@/lib/prompts";
-import { aiEvaluationSchema } from "@/types";
 import { google } from "@ai-sdk/google";
 import { streamObject } from "ai";
+import { eq } from "drizzle-orm";
+import { db } from "@/db";
+import { answersTable } from "@/db/schema/questions";
+import { aiEvaluationSchema } from "@/lib/zod-schemas";
 
 export const maxDuration = 30;
 
@@ -24,7 +25,8 @@ export async function POST(req: Request) {
     messages: [
       {
         role: "system",
-        content: SYSTEM_PROMPT_INTERVIEWER,
+        content:
+          "Evaluate the answer to the question based on the following criteria: clarity, accuracy, relevance, and completeness.",
       },
       {
         role: "user",
@@ -33,12 +35,12 @@ export async function POST(req: Request) {
     ],
     onFinish: async ({ object, error }) => {
       if (!error) {
-        await db.answer.update({
-          where: { id: answerId },
-          data: {
+        await db
+          .update(answersTable)
+          .set({
             aiEvaluation: object,
-          },
-        });
+          })
+          .where(eq(answersTable.id, answerId));
       }
     },
   });

@@ -1,33 +1,19 @@
-import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { ReactQueryClientProvider } from "@/components/providers/query-provider";
-import { Toaster } from "@/components/ui/sonner";
-import { Analytics } from "@vercel/analytics/next";
 
 import "./globals.css";
-import { ThemeProvider } from "@/components/providers/theme-provider";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Navbar } from "@/components/custom/navbar";
+import { Providers } from "@/components/providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const fontSans = Geist({
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const fontMono = Geist_Mono({
   subsets: ["latin"],
+  variable: "--font-mono",
 });
-
-export const metadata: Metadata = {
-  title: "Interview Archive",
-  description: "Share interview questions with ease",
-  openGraph: {
-    title: 'Interview Archive',
-    description: 'Share interview questions with ease',
-    url: 'https://interview-archive.vercel.app',
-    siteName: 'Interview Archive',
-    images: [{ url: 'https://interview-archive.vercel.app/og.png' }]
-  },
-};
 
 export default function RootLayout({
   children,
@@ -37,19 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
-          storageKey="echo-theme"
-          disableTransitionOnChange
-        >
-          <ReactQueryClientProvider>{children}</ReactQueryClientProvider>
-          <Toaster richColors position="top-center" />
-        </ThemeProvider>
-        <Analytics />
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
+        <SpeedInsights />
       </body>
     </html>
   );
