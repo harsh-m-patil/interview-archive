@@ -91,6 +91,7 @@ export async function getQuestion(questionId: string) {
   try {
     const [question] = await db
       .select({
+        id: questionsTable.id,
         title: questionsTable.title,
         description: questionsTable.description,
         company: companiesTable.name,

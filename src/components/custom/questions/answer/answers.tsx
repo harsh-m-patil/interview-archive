@@ -3,14 +3,35 @@
 import { useState } from "react";
 import { Streamdown } from "streamdown";
 import { Loading } from "@/components/custom/loading";
+import { UserProfile } from "@/components/custom/user/profile";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { trpc } from "@/trpc/client";
-import { UserProfile } from "../../user/profile";
 import AnswerForm from "./answer-form";
+import { Evaluation } from "./evaluation";
 
-export default function Answers({ questionId }: { questionId: string }) {
-  const { data: res, status } = trpc.answers.get.useQuery({ questionId });
+type AnswersProp = {
+  question: {
+    id: string;
+    title: string;
+    description: string;
+  };
+};
+export default function Answers({ question }: AnswersProp) {
+  const { data: res, status } = trpc.answers.get.useQuery({
+    questionId: question.id,
+  });
   const [visible, setVisible] = useState(false);
 
   if (status === "pending") {
@@ -41,7 +62,7 @@ export default function Answers({ questionId }: { questionId: string }) {
         </div>
       </div>
       <div className="min-h-24 border-y px-4 py-3">
-        {visible && <AnswerForm questionId={questionId} />}
+        {visible && <AnswerForm questionId={question.id} />}
         {res.data.length === 0 ? (
           <div className="flex h-96 items-center justify-center text-emerald-400 text-xl tracking-tighter selection:bg-emerald-100 selection:text-emerald-700 md:text-3xl lg:text-4xl">
             No answers yet maybe you can help
@@ -60,6 +81,22 @@ export default function Answers({ questionId }: { questionId: string }) {
                 <CardContent>
                   <Streamdown>{answer.content}</Streamdown>
                 </CardContent>
+                <CardFooter className="flex">
+                  <Accordion
+                    className="w-full rounded-md border px-4 py-1"
+                    collapsible
+                    type="single"
+                  >
+                    <AccordionItem value="item-1">
+                      <AccordionTrigger className="text-[0.9rem]">
+                        AI Evaluation
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <Evaluation answer={answer} question={question} />
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </CardFooter>
               </Card>
             ))}
           </div>

@@ -65,7 +65,7 @@ export default async function QuestionPage({ params }: QuestionPageProps) {
           <TabsTrigger value="ai-answer">AI Answer</TabsTrigger>
         </TabsList>
         <TabsContent value="answers">
-          <Answers questionId={questionId} />
+          <Answers question={question} />
         </TabsContent>
         <TabsContent value="ai-answer">
           <AiAnswer

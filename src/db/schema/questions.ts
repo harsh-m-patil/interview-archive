@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   index,
+  json,
   pgTable,
   // biome-ignore lint/nursery/noDeprecatedImports: docs
   primaryKey,
@@ -9,6 +10,7 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
+import type { AIEvaluation } from "@/lib/zod-schemas";
 import { user } from "./auth";
 
 export const questionsTable = pgTable(
@@ -52,6 +54,7 @@ export const answersTable = pgTable(
       .notNull()
       .references(() => user.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
+    aiEvaluation: json().$type<AIEvaluation>(),
     updatedAt: timestamp("updated_at").defaultNow().notNull(),
     isDeleted: boolean("is_deleted").default(false).notNull(),
   },

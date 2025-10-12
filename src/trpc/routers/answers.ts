@@ -23,6 +23,7 @@ export const answersRouter = createTRPCRouter({
             createdAt: answersTable.createdAt,
             userName: user.name,
             userImage: user.image,
+            aiEvaluation: answersTable.aiEvaluation,
           })
           .from(answersTable)
           .leftJoin(user, eq(user.id, answersTable.userId))
