@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { and, eq, type SQL, sql } from "drizzle-orm";
+import { and, count, eq, type SQL, sql } from "drizzle-orm";
 import { db } from "@/db";
 import { user } from "@/db/schema/auth";
 import { companiesTable, questionsTable } from "@/db/schema/questions";
@@ -15,28 +15,40 @@ export const questionRouter = createTRPCRouter({
       );
     }
     try {
-      const questions = await db
-        .select({
-          id: questionsTable.id,
-          title: questionsTable.title,
-          description: questionsTable.description,
-          companyName: companiesTable.name,
-          postedBy: user.name,
-          postedByImage: user.image,
-          createdAt: questionsTable.createdAt,
-          aiAnswer: questionsTable.aiAnswer,
-        })
-        .from(questionsTable)
-        .leftJoin(
-          companiesTable,
-          eq(companiesTable.id, questionsTable.companyId)
-        )
-        .leftJoin(user, eq(user.id, questionsTable.postedBy))
-        .where(and(...whereConditions));
+      // calculate offset using page and limit
+      const offset = (input.page - 1) * input.limit;
+
+      const [questions, [total]] = await Promise.all([
+        db
+          .select({
+            id: questionsTable.id,
+            title: questionsTable.title,
+            description: questionsTable.description,
+            companyName: companiesTable.name,
+            postedBy: user.name,
+            postedByImage: user.image,
+            createdAt: questionsTable.createdAt,
+            aiAnswer: questionsTable.aiAnswer,
+          })
+          .from(questionsTable)
+          .leftJoin(
+            companiesTable,
+            eq(companiesTable.id, questionsTable.companyId)
+          )
+          .leftJoin(user, eq(user.id, questionsTable.postedBy))
+          .where(and(...whereConditions))
+          .offset(offset)
+          .limit(input.limit),
+        db
+          .select({ count: count() })
+          .from(questionsTable)
+          .where(and(...whereConditions)),
+      ]);
 
       return {
         status: "success",
         message: "Questions fetched successfully",
+        total: total.count,
         data: questions,
       } as const;
     } catch (err) {

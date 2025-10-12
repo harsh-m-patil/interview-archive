@@ -34,7 +34,7 @@ export function QuestionCard({ question }: QuestionCardProps) {
         </p>
       </CardHeader>
       <CardContent>
-        <Badge>{question.companyName}</Badge>
+        <Badge>{question.companyName ?? "Not Available"}</Badge>
         {/*<div className="flex items-center space-x-2">
           {tags.map((tag) => (
             <Badge key={tag.id}>{tag.name}</Badge>

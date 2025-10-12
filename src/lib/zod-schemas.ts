@@ -10,13 +10,14 @@ export const postQuestionSchema = z.object({
 });
 
 const MAX_LENGTH = 30;
-const LIMIT = 10;
+const LIMIT = 30;
+
 export const getQuestionsInputSchema = z.object({
   search: z.string().min(2).max(MAX_LENGTH).optional().nullable(),
   role: z.string().optional().nullable(),
   company: z.string().optional().nullable(),
-  page: z.number().min(1).optional(),
-  limit: z.number().min(1).max(LIMIT).optional(),
+  page: z.number().min(1).optional().default(1),
+  limit: z.number().min(1).max(LIMIT).optional().default(10),
 });
 
 export const getQuestionInputSchema = z.object({
